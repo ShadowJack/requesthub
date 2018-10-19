@@ -17,10 +17,13 @@ defmodule RequestbinWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", HomepageController, :index
+
+    # bins
+    post "/bins", BinController, :create
+    match :*, "/bins/:id", BinController, :create_request
+
+    # TODO: bin requests
+    # get "/bins/:id/requests", RequestsController, :show
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", RequestbinWeb do
-  #   pipe_through :api
-  # end
 end

@@ -1,0 +1,8 @@
+<h2>Show Bin</h2>
+
+<ul>
+
+</ul>
+
+<span><%= link "Edit", to: bin_path(@conn, :edit, @bin) %></span>
+<span><%= link "Back", to: bin_path(@conn, :index) %></span>
