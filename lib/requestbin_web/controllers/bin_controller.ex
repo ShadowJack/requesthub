@@ -6,15 +6,15 @@ defmodule RequestbinWeb.BinController do
 
   def create(conn, _) do
     case Bins.create_bin() do
-      {:ok, _bin} ->
+      {:ok, bin} ->
         conn
-        |> put_flash(:info, "Bin created successfully.")
+        |> put_flash(:info, "Bin #{bin.id} is created successfully.")
         # TODO: redirect to bin_requests_index
-        # |> redirect(to: bin_path(conn, :show, bin))
+        # |> redirect(to: bin_path(conn, :index, bin))
         |> redirect(to: "/")
       {:error, %Ecto.Changeset{} = _changeset} ->
         conn
-        |> put_flash(:errors, ["Something went wrong, please try again later"])
+        |> put_flash(:error, "Something went wrong, please try again later")
         |> redirect(to: "/")
     end
   end

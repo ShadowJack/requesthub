@@ -1,12 +1,11 @@
 defmodule Requestbin.Bins.Bin do
-  use Ecto.Schema
+  use Requestbin.Schema
   import Ecto.Changeset
 
-
-  @primary_key {:id, :binary_id, autogenerate: true}
-  @timestamps_opts [type: :utc_datetime, usec: true]
   schema "bins" do
     field :name, :string
+
+    has_many :requests, Requestbin.Bins.Request
 
     timestamps()
   end
