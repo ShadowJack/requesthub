@@ -26,7 +26,7 @@ defmodule Requestbin.Bins.Request do
       verb: verb, 
       body: body,
       query: query,
-      headers: Enum.into(headers, %{}))
+      headers: cast_headers(headers))
     |> validate_required([:bin_id, :verb])
     |> foreign_key_constraint(:bin_id)
   end
@@ -50,5 +50,16 @@ defmodule Requestbin.Bins.Request do
         Logger.error("Error reading request body: #{error}")
         ""
     end
+  end
+
+  @spec cast_headers([{String.t, String.t}]) :: %{ String.t => String.t | [String.t] } 
+  defp cast_headers(headers) do
+    headers
+    |> Enum.reduce(%{}, fn ({key, val}, acc) -> 
+      Map.update(acc, key, val, fn 
+        curr_vals when is_list(curr_vals) -> [val | curr_vals] 
+        curr_val -> [val, curr_val]
+      end)
+    end)
   end
 end
