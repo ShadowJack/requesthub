@@ -20,6 +20,7 @@ defmodule Requestbin.Bins do
       {:ok, %Bin{name: value}}
 
   """
+  @spec create_bin(%{String.t => any}) :: {:ok, Bin.t} | {:error, Ecto.Changeset.t}
   def create_bin(attrs \\ %{}) do
     %Bin{}
     |> Bin.changeset(attrs)
@@ -27,7 +28,23 @@ defmodule Requestbin.Bins do
   end
 
   @doc """
+  Gets a single bin.
 
+  Raises `Ecto.NoResultsError` if the Bin does not exist.
+
+  ## Examples
+
+      iex> get_bin!("123")
+      %Bin{}
+
+      iex> get_bin!("456")
+      ** (Ecto.NoResultsError)
+
+  """
+  @spec get_bin!(String.t) :: Bin.t | none
+  def get_bin!(id), do: Repo.get!(Bin, id)
+
+  @doc """
   Deletes a Bin.
 
   ## Examples
@@ -39,6 +56,7 @@ defmodule Requestbin.Bins do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec delete_bin(Bin.t) :: {:ok, Bin.t} | {:error, Ecto.Changeset.t}
   def delete_bin(%Bin{} = bin) do
     Repo.delete(bin)
   end
@@ -59,6 +77,7 @@ defmodule Requestbin.Bins do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec create_request(Plug.Conn.t) :: {:ok, Request.t} | {:error, Ecto.Changeset.t}
   def create_request(conn) do
     %Request{}
     |> Request.changeset(conn)
@@ -74,8 +93,9 @@ defmodule Requestbin.Bins do
       [%Request{}, ...]
 
   """
-  def list_requests do
-    Repo.all(Request)
+  @spec list_requests(String.t) :: [Request.t] | none
+  def list_requests(bin_id) when is_binary(bin_id) do
+    # Repo.all(Request)
   end
 
   @doc """
@@ -92,8 +112,8 @@ defmodule Requestbin.Bins do
       ** (Ecto.NoResultsError)
 
   """
+  @spec get_request!(String.t) :: Request.t | none
   def get_request!(id), do: Repo.get!(Request, id)
-
 
   @doc """
   Deletes a Request.
@@ -107,6 +127,7 @@ defmodule Requestbin.Bins do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec delete_request(Request.t) :: {:ok, Request.t} | {:error, Ecto.Changeset.t}
   def delete_request(%Request{} = request) do
     Repo.delete(request)
   end
