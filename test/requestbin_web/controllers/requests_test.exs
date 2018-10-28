@@ -55,7 +55,7 @@ defmodule RequestbinWeb.Controllers.RequestsTest do
     #TODO: get request and check its body
   end
 
-  test "can create GET request with query-string", context do
+  test "can create a GET request with query-string", context do
     conn = 
       context.conn
       |> get "/bins/#{context[:bin_id]}?abc=321&d=test"
@@ -63,5 +63,27 @@ defmodule RequestbinWeb.Controllers.RequestsTest do
     assert get_flash(conn, :info) =~ "Request has been created"
 
     #TODO: get request and check its body
+  end
+
+  test "can create a PATCH request", context do
+    conn = 
+      context.conn
+      |> put_req_header("content-type", "application/json")
+      |> patch "/bins/#{context[:bin_id]}?abc=321&d=test", "{\"a\": 1}"
+
+    assert get_flash(conn, :info) =~ "Request has been created"
+
+    #TODO: get request and check its body
+  end
+
+  test "cookies are saved in headers", context do
+    conn = 
+      context.conn
+      |> put_req_cookie("TestCookie", "Test cookie value")
+      |> get "/bins/#{context[:bin_id]}?abc=321&d=test"
+
+    assert get_flash(conn, :info) =~ "Request has been created"
+
+    #TODO: get request and check its headers for a cookie
   end
 end
