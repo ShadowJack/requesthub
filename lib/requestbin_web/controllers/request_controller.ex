@@ -16,8 +16,7 @@ defmodule RequestbinWeb.RequestController do
       {:ok, request} ->
         conn
         |> put_flash(:info, "Request has been created successfully.")
-        # |> redirect(to: request_path(conn, :show, request))
-        |> redirect(to: "/")
+        |> redirect(to: request_path(conn, :show, request.bin_id, request.id))
       {:error, %Ecto.Changeset{errors: errors}} ->
         conn
         |> put_flash(:error, Request.build_error_message(errors))

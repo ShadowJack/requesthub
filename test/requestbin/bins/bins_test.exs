@@ -61,7 +61,7 @@ defmodule Requestbin.BinsTest do
 
     test "get_request!/1 returns the request with given id", context do
       request = request_fixture(context[:conn])
-      assert Bins.get_request!(request.id) == request
+      assert Bins.get_request!(context[:bin].id, request.id) == request
     end
 
     test "create_request/1 with valid data creates a request", context do
@@ -76,7 +76,7 @@ defmodule Requestbin.BinsTest do
     test "delete_request/1 deletes the request", context do
       request = request_fixture(context[:conn])
       assert {:ok, %Request{}} = Bins.delete_request(request)
-      assert_raise Ecto.NoResultsError, fn -> Bins.get_request!(request.id) end
+      assert_raise Ecto.NoResultsError, fn -> Bins.get_request!(context[:bin].id, request.id) end
     end
   end
 end

@@ -105,15 +105,15 @@ defmodule Requestbin.Bins do
 
   ## Examples
 
-      iex> get_request!(123)
+      iex> get_request!("123", "abc")
       %Request{}
 
-      iex> get_request!(456)
+      iex> get_request!("123", "def")
       ** (Ecto.NoResultsError)
 
   """
-  @spec get_request!(String.t) :: Request.t | none
-  def get_request!(id), do: Repo.get!(Request, id)
+  @spec get_request!(String.t, String.t) :: Request.t | none
+  def get_request!(bin_id, req_id), do: Repo.get_by!(Request, bin_id: bin_id, id: req_id)
 
   @doc """
   Deletes a Request.
