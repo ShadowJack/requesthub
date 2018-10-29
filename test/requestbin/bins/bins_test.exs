@@ -41,7 +41,7 @@ defmodule Requestbin.BinsTest do
 
       conn = 
         context.conn
-        |> Map.put(:params, %{"id" => bin.id})
+        |> Map.put(:params, %{"bin_id" => bin.id})
         |> Map.put(:method, "GET")
         |> Map.put(:query_string, "?a=123&b=456")
         |> Map.put(:req_headers, [{"Content-Type", "application/json"}, {"Accept", "application/xml"}])

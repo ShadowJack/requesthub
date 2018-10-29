@@ -19,7 +19,7 @@ defmodule RequestbinWeb.Router do
   end
 
   # specific action to save any request that is coming to the bin
-  match :*, "/bins/:id", RequestbinWeb.RequestController, :create
+  match :*, "/bins/:bin_id", RequestbinWeb.RequestController, :create
 
   scope "/", RequestbinWeb do
     pipe_through :browser # Use the default browser stack
@@ -29,8 +29,9 @@ defmodule RequestbinWeb.Router do
     # bins
     post "/bins", BinController, :create
 
-    # TODO: bin requests
-    # get "/bins/:id/requests", RequestsController, :show
+    #  bin requests
+    # get "/bins/:bin_id/requests", RequestsController, :index
+    get "/bins/:bin_id/requests/:req_id", RequestsController, :show
   end
 
 end

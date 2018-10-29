@@ -17,7 +17,7 @@ defmodule Requestbin.Bins.Request do
   @doc """
   A changeset for a new request
   """
-  def changeset(request, %Plug.Conn{params: %{"id" => bin_id}, method: verb, query_string: query, req_headers: headers} = conn) do
+  def changeset(request, %Plug.Conn{params: %{"bin_id" => bin_id}, method: verb, query_string: query, req_headers: headers} = conn) do
     body = read_body(conn)
 
     request
