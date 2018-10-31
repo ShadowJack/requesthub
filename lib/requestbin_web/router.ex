@@ -31,7 +31,7 @@ defmodule RequestbinWeb.Router do
 
     #  bin requests
     get "/bins/:bin_id/requests/:req_id", RequestController, :show
-    get "/bins/:bin_id/requests", RequestsController, :index
+    get "/bins/:bin_id/requests", RequestController, :index
   end
 
 end

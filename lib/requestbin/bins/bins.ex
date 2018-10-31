@@ -85,17 +85,17 @@ defmodule Requestbin.Bins do
   end
 
   @doc """
-  Returns the list of requests.
+  Returns the list of requests in a specific bin.
 
   ## Examples
 
-      iex> list_requests()
+      iex> list_requests("123")
       [%Request{}, ...]
 
   """
   @spec list_requests(String.t) :: [Request.t] | none
   def list_requests(bin_id) when is_binary(bin_id) do
-    # Repo.all(Request)
+    Repo.all(from r in Request, where: r.bin_id == ^bin_id)
   end
 
   @doc """

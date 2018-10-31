@@ -7,10 +7,10 @@ defmodule RequestbinWeb.RequestController do
   plug :fetch_session when action in [:create]
   plug :fetch_flash when action in [:create]
 
-  def index(conn, _params) do
-    conn
-    # requests = Bins.list_requests()
-    # render(conn, "index.html", requests: requests)
+  def index(conn, %{"bin_id" => bin_id}) do
+    reqs = Bins.list_requests(bin_id)
+
+    render(conn, "index.html", reqs: reqs)
   end
 
   def create(conn, _) do
