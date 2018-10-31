@@ -101,6 +101,22 @@ defmodule Requestbin.Bins do
   @doc """
   Gets a single request.
 
+  Returns `nil` if the Request does not exist
+
+  ## Examples
+
+      iex> get_request("123", "abc")
+      %Request{}
+
+      iex> get_request("123", "def")
+      nil
+  """
+  @spec get_request(String.t, String.t) :: Request.t | nil | none
+  def get_request(bin_id, req_id), do: Repo.get_by(Request, bin_id: bin_id, id: req_id)
+
+  @doc """
+  Gets a single request.
+
   Raises `Ecto.NoResultsError` if the Request does not exist.
 
   ## Examples
