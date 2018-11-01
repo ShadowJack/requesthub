@@ -1,0 +1,6 @@
+.request-details-toggle[aria-expanded=false] .text-expanded {
+  display: none;
+}
+.request-details-toggle[aria-expanded=true] .text-collapsed {
+  display: none;
+}

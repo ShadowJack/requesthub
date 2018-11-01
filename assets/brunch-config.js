@@ -7,7 +7,7 @@ exports.config = {
     stylesheets: {
       joinTo: "css/app.css",
       order: {
-        after: ["css/app.sass"] // concat app.css last
+        after: ["css/app.scss"] // concat app.css last
       }
     },
     templates: {

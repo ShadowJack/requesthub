@@ -1,25 +1,22 @@
-<h2>Latest requests</h2>
-
-<table class="table">
-  <thead>
-    <tr>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
+<h2>Latest requests</h2> 
 <%= for req <- @reqs do %>
-    <tr>
-      <td class="text-left">
+  <div class="request">
+    <div class="d-flex">
+      <div class="flex-fill request-description">
         <%= String.upcase(req.verb) %> /<%= shorten_beginning(req.bin_id, 4) %><%= if (String.length(req.query) > 0), do: "?" <> req.query, else: nil %><br/>
         <%= if String.length(req.body) > 0 do %>
           Body: <%= shorten(req.body, 50) %>
         <% end %>
-      </td>
-      <td class="text-right">
-        <span><%= link "Show", to: request_path(@conn, :show, req.bin_id, req.id), class: "btn btn-default btn-xs" %></span>
-      </td>
-    </tr>
+      </div>
+      <div class="request-action">
+        <a class="btn btn-light request-details-toggle" data-toggle="collapse" href="#requestDetails_<%= req.id %>" role="button" aria-expanded="false">
+          <span class="text-collapsed">Expand</span>
+          <span class="text-expanded">Collapse</span>
+        </a>
+      </div>
+    </div>
+    <div id="requestDetails_<%= req.id%>" class="collapse w-auto">
+      <%= render(RequestbinWeb.RequestView, "show.html", req: req) %>
+    </div>
+  </div>
 <% end %>
-  </tbody>
-</table>

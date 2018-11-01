@@ -1,1 +1,5 @@
-<%= button("Create a new bin", to: "/bins") %>
+<div class="text-center">
+  <h3>Welcome to the Requestbin.</h3>
+
+  <%= button("Create a new bin", to: "/bins", class: "btn btn-primary mt-3") %>
+</div>
