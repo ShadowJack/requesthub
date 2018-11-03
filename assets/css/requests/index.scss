@@ -1,16 +1,56 @@
-.request {
-  border: 1px solid black;
+// Color schemes
 
+// Scheme1
+// $color1: hsla(201%, 46%, 29%, 1);
+// $color2: hsla(11%, 31%, 65%, 1);
+// $bgcolor: hsla(201%, 33%, 62%, 1);
+// $color4: hsla(20%, 33%, 95%, 1);
+// $color5: hsla(45%, 23%, 65%, 1);
+
+// Schema2
+$color1: hsla(222%, 15%, 87%, 1);
+$color2: hsla(5%, 6%, 66%, 1);
+$bgcolor: hsla(208%, 14%, 82%, 1);
+$color4: hsla(0%, 0%, 89%, 1);
+$text-color: hsla(0%, 0%, 24%, 1);
+
+body {
+  color: $text-color !important;
+}
+
+.request {
+  background-color: lighten($bgcolor, 10%);
+  border: 1px solid $color4;
+  border-radius: 0.5rem;
+}
+
+.request-title {
+  font-size: 1.1rem;
 }
 
 .request-action {
   display: flex;
   align-items: center;
+
+  .request-toggle-details {
+    color: lighten($text-color, 25%);
+  }
+
+  .request-toggle-details[aria-expanded=false] .text-expanded {
+    display: none;
+  }
+  .request-toggle-details[aria-expanded=true] .text-collapsed {
+    display: none;
+  }
 }
 
-.request-toggle-details[aria-expanded=false] .text-expanded {
-  display: none;
+.request-details {
+  margin-top: 1rem;
+  padding: 1rem;
+
+  background-color: lighten($bgcolor, 15%);
+  border-radius: 0.5rem;
+
+  font-size: 1.1rem;
 }
-.request-toggle-details[aria-expanded=true] .text-collapsed {
-  display: none;
-}
+

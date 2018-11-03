@@ -9,13 +9,13 @@
         <% end %>
       </div>
       <div class="request-action">
-        <a class="btn btn-light request-toggle-details" data-toggle="collapse" href="#requestDetails_<%= req.id %>" role="button" aria-expanded="<%= if idx == 0, do: "true", else: "false" %>">
+        <a class="request-toggle-details" data-toggle="collapse" href="#requestDetails_<%= req.id %>" role="button" aria-expanded="<%= if idx == 0, do: "true", else: "false" %>">
           <span class="text-collapsed">Expand</span>
           <span class="text-expanded">Collapse</span>
         </a>
       </div>
     </div>
-    <div id="requestDetails_<%= req.id%>" class="collapse<%= if idx == 0, do: " show" %> w-auto">
+    <div id="requestDetails_<%= req.id%>" class="request-details collapse<%= if idx == 0, do: " show" %> w-auto">
       <%= render(RequestbinWeb.RequestView, "show.html", req: req) %>
     </div>
   </div>
