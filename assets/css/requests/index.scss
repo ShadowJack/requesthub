@@ -1,6 +1,16 @@
-.request-details-toggle[aria-expanded=false] .text-expanded {
+.request {
+  border: 1px solid black;
+
+}
+
+.request-action {
+  display: flex;
+  align-items: center;
+}
+
+.request-toggle-details[aria-expanded=false] .text-expanded {
   display: none;
 }
-.request-details-toggle[aria-expanded=true] .text-collapsed {
+.request-toggle-details[aria-expanded=true] .text-collapsed {
   display: none;
 }

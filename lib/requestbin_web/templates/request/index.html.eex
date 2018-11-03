@@ -1,21 +1,21 @@
 <h2>Latest requests</h2> 
-<%= for req <- @reqs do %>
-  <div class="request">
-    <div class="d-flex">
-      <div class="flex-fill request-description">
-        <%= String.upcase(req.verb) %> /<%= shorten_beginning(req.bin_id, 4) %><%= if (String.length(req.query) > 0), do: "?" <> req.query, else: nil %><br/>
+<%= for {req, idx} <- Enum.with_index(@reqs) do %>
+  <div class="request p-2 m-2">
+    <div class="d-flex request-header">
+      <div class="flex-fill request-title">
+        <%= get_request_title(req)  %><br/>
         <%= if String.length(req.body) > 0 do %>
           Body: <%= shorten(req.body, 50) %>
         <% end %>
       </div>
       <div class="request-action">
-        <a class="btn btn-light request-details-toggle" data-toggle="collapse" href="#requestDetails_<%= req.id %>" role="button" aria-expanded="false">
+        <a class="btn btn-light request-toggle-details" data-toggle="collapse" href="#requestDetails_<%= req.id %>" role="button" aria-expanded="<%= if idx == 0, do: "true", else: "false" %>">
           <span class="text-collapsed">Expand</span>
           <span class="text-expanded">Collapse</span>
         </a>
       </div>
     </div>
-    <div id="requestDetails_<%= req.id%>" class="collapse w-auto">
+    <div id="requestDetails_<%= req.id%>" class="collapse<%= if idx == 0, do: " show" %> w-auto">
       <%= render(RequestbinWeb.RequestView, "show.html", req: req) %>
     </div>
   </div>
