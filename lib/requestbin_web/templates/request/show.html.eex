@@ -1,6 +1,5 @@
-Bin id: <%= @req.bin_id %><br/>
-Id: <%= @req.id %><br/>
 Verb: <%= @req.verb %><br/>
 Query string: <%= @req.query %><br/>
 Body: <%= @req.body %><br/>
+<%# Headers: <%= @req.headers %>
 

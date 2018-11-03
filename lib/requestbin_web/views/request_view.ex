@@ -42,4 +42,12 @@ defmodule RequestbinWeb.RequestView do
       title
     end
   end
+
+  @doc """
+  Display headers
+  """
+  @spec display_headers(%{String.t => any}) :: String.t
+  def display_headers(headers) do
+    
+  end
 end

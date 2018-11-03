@@ -10,7 +10,7 @@
 // Schema2
 $color1: hsla(222%, 15%, 87%, 1);
 $color2: hsla(5%, 6%, 66%, 1);
-$bgcolor: hsla(208%, 14%, 82%, 1);
+$bgcolor: rgba(202, 220, 237, 1);
 $color4: hsla(0%, 0%, 89%, 1);
 $text-color: hsla(0%, 0%, 24%, 1);
 
@@ -19,7 +19,7 @@ body {
 }
 
 .request {
-  background-color: lighten($bgcolor, 10%);
+  background-color: lighten($bgcolor, 8%);
   border: 1px solid $color4;
   border-radius: 0.5rem;
 }
@@ -48,7 +48,7 @@ body {
   margin-top: 1rem;
   padding: 1rem;
 
-  background-color: lighten($bgcolor, 15%);
+  background-color: lighten($bgcolor, 12%);
   border-radius: 0.5rem;
 
   font-size: 1.1rem;

@@ -10,7 +10,7 @@ defmodule RequestbinWeb.RequestController do
   def index(conn, %{"bin_id" => bin_id}) do
     reqs = Bins.list_requests(bin_id)
 
-    render(conn, "index.html", reqs: reqs)
+    render(conn, "index.html", reqs: reqs, bin_id: bin_id)
   end
 
   def create(conn, _) do
