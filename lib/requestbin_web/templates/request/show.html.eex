@@ -1,5 +1,7 @@
+Time: <%= @req.inserted_at %><br/>
 Verb: <%= @req.verb %><br/>
 Query string: <%= @req.query %><br/>
 Body: <%= @req.body %><br/>
-<%# Headers: <%= @req.headers %>
+Who: <%= display_who(@req) %></br>
+Headers: <%= display_headers(@req.headers) %>
 

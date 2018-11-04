@@ -10,6 +10,8 @@ defmodule Requestbin.Bins.Request do
     field :query, :string
     field :headers, :map
     field :body, :string
+    field :ip_address, Requestbin.PostgresTypes.INET
+    field :port, :integer
 
     timestamps()
   end
@@ -19,6 +21,7 @@ defmodule Requestbin.Bins.Request do
   """
   def changeset(request, %Plug.Conn{params: %{"bin_id" => bin_id}, method: verb, query_string: query, req_headers: headers} = conn) do
     body = read_body(conn)
+    peer_data = Plug.Conn.get_peer_data(conn)
 
     request
     |> change(
@@ -26,7 +29,9 @@ defmodule Requestbin.Bins.Request do
       verb: verb, 
       body: body,
       query: query,
-      headers: cast_headers(headers))
+      headers: cast_headers(headers),
+      port: peer_data[:port])
+    |> cast(%{"ip_address" => peer_data}, [:ip_address])
     |> validate_required([:bin_id, :verb])
     |> foreign_key_constraint(:bin_id)
   end

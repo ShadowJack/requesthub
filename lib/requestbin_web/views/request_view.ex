@@ -46,8 +46,24 @@ defmodule RequestbinWeb.RequestView do
   @doc """
   Display headers
   """
-  @spec display_headers(%{String.t => any}) :: String.t
+  @spec display_headers(%{String.t => any}) :: Phoenix.Html.safe
   def display_headers(headers) do
-    
+    raw(inspect(headers))
+  end
+
+  @doc """
+  Display IP address and port
+  """
+  @spec display_who(Request.t) :: Phoenix.Html.safe
+  def display_who(%Request{ip_address: nil, port: _}), do: raw(nil)
+  def display_who(%Request{ip_address: %Postgrex.INET{address: addr}, port: port}) do
+    address_string = 
+      addr
+      |> :inet_parse.ntoa()
+      |> to_string()
+    case port do
+      nil -> raw(address_string)
+      p -> raw(address_string <> ":" <> to_string(p))
+    end
   end
 end
