@@ -15,8 +15,8 @@
         </a>
       </div>
     </div>
-    <div id="requestDetails_<%= req.id%>" class="request-details collapse<%= if idx == 0, do: " show" %> w-auto">
-      <%= render(RequestbinWeb.RequestView, "show.html", req: req) %>
+    <div id="requestDetails_<%= req.id%>" class="request-details-container collapse<%= if idx == 0, do: " show" %> w-auto">
+      <%= render(RequestbinWeb.RequestView, "show.html", req: req, conn: @conn) %>
     </div>
   </div>
 <% end %>

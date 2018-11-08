@@ -21,6 +21,11 @@ defmodule RequestbinWeb.Endpoint do
 
   plug Plug.Logger
 
+  plug Plug.Parsers,
+    parsers: [:urlencoded, :multipart, :json],
+    pass: ["*/*"],
+    body_reader: {RequestbinWeb.CacheBodyReader, :read_body, []},
+    json_decoder: Jason
   plug Plug.MethodOverride
   plug Plug.Head
 

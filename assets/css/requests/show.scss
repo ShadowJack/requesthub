@@ -1,0 +1,10 @@
+.request-details {
+  display: flex;
+  font-size: 1.1rem;
+  justify-content: space-between;
+
+  .request-details-actions {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}

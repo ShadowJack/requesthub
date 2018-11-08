@@ -37,4 +37,25 @@ defmodule RequestbinWeb.RequestController do
         |> redirect(to: request_path(conn, :index, bin_id))
     end
   end
+
+  def delete(conn, %{"bin_id" => bin_id, "req_id" => req_id}) do
+    IO.puts("Deleting #{req_id}")
+    with %Request{} = req <- Bins.get_request(bin_id, req_id),
+         {:ok, _} <- Bins.delete_request(req) do
+      put_flash_and_redirect_to_index(conn, bin_id, :info, "The request has been deleted")
+    else
+      nil ->
+        put_flash_and_redirect_to_index(conn, bin_id, :error, "Sorry, request with id=\"#{req_id}\" is not found.")
+      {:error, _} ->
+        put_flash_and_redirect_to_index(conn, bin_id, :error, "Sorry, an error has occured while deleting the request with id=\"#{req_id}\". Please try again later.")
+    end
+  end
+
+  # Set flash message and redirect to the list of requests
+  @spec put_flash_and_redirect_to_index(Plug.Conn.t, String.t, atom, String.t) :: Plug.Conn.t
+  defp put_flash_and_redirect_to_index(conn, bin_id, flash_key, flash_message) do
+    conn
+    |> put_flash(flash_key, flash_message)
+    |> redirect(to: request_path(conn, :index, bin_id))
+  end
 end

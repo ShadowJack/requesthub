@@ -1,7 +1,16 @@
-Time: <%= @req.inserted_at %><br/>
-Verb: <%= @req.verb %><br/>
-Query string: <%= @req.query %><br/>
-Body: <%= @req.body %><br/>
-Who: <%= display_who(@req) %></br>
-Headers: <%= display_headers(@req.headers) %>
+<div class="request-details">
+  <div>
+    Time: <%= @req.inserted_at %><br/>
+    Verb: <%= @req.verb %><br/>
+    Query string: <%= @req.query %><br/>
+    Body: <%= @req.body %><br/>
+    Who: <%= display_who(@req) %></br>
+    Headers: <%= display_headers(@req.headers) %>
+  </div>
+  <div class="request-details-actions">
+    <div class="wrapper">
+      <%= link "Delete", to: request_path(@conn, :delete, @req.bin_id, @req.id), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-outline-danger" %>
+    </div>
+  </div>
+</div>
 

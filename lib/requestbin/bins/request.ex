@@ -20,14 +20,13 @@ defmodule Requestbin.Bins.Request do
   A changeset for a new request
   """
   def changeset(request, %Plug.Conn{params: %{"bin_id" => bin_id}, method: verb, query_string: query, req_headers: headers} = conn) do
-    body = read_body(conn)
     peer_data = Plug.Conn.get_peer_data(conn)
 
     request
     |> change(
       bin_id: bin_id, 
       verb: verb, 
-      body: body,
+      body: read_body(conn),
       query: query,
       headers: cast_headers(headers),
       port: peer_data[:port])
@@ -45,15 +44,28 @@ defmodule Requestbin.Bins.Request do
     end)
   end
 
+
+  @max_body_length_in_bytes 256_000
+  def max_body_length_in_bytes() do
+    @max_body_length_in_bytes
+  end
+
+  # Extract body either from conn.assigns or from the connection itself
+  # If the max allowed length is exceeded, then body is truncated
+  @spec read_body(Plug.Conn.t) :: String.t | nil
   defp read_body(conn) do
-    case Plug.Conn.read_body(conn) do
-      {:ok, data, _} -> data
-      {:more, data, _} ->
-        Logger.warn("Body is not fully read yet")
-        data
-      {:error, error} ->
-        Logger.error("Error reading request body: #{error}")
-        ""
+    case conn.assigns[:raw_body] do
+      nil -> read_body_from_conn(conn)
+      [] -> nil
+      [body | _] -> body
+    end
+  end
+
+  @spec read_body_from_conn(Plug.Conn.t) :: String.t
+  defp read_body_from_conn(conn) do
+    case Plug.Conn.read_body(conn, length: max_body_length_in_bytes()) do
+      {:ok, body, _} -> body
+      {:more, body, _} -> body
     end
   end
 

@@ -2,20 +2,11 @@ defmodule RequestbinWeb.Router do
   use RequestbinWeb, :router
 
   pipeline :browser do
-    plug Plug.Parsers,
-      parsers: [:urlencoded, :multipart, :json],
-      pass: ["*/*"],
-      json_decoder: Jason
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-  end
-
-  pipeline :raw_request do
-    plug :fetch_session
-    plug :fetch_flash
   end
 
   # specific action to save any request that is coming to the bin
@@ -30,8 +21,13 @@ defmodule RequestbinWeb.Router do
     post "/bins", BinController, :create
 
     #  bin requests
-    get "/bins/:bin_id/requests/:req_id", RequestController, :show
     get "/bins/:bin_id/requests", RequestController, :index
+    get "/bins/:bin_id/requests/:req_id", RequestController, :show
+    delete "/bins/:bin_id/requests/:req_id", RequestController, :delete
+
+    # catch-all that will display 404 error
+    match :*, "/*path", HomepageController, :not_found
   end
+
 
 end
