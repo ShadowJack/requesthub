@@ -2,6 +2,8 @@ defmodule Requestbin.Bins.Bin do
   use Requestbin.Schema
   import Ecto.Changeset
 
+  @type bin_id :: String.t
+
   schema "bins" do
     field :name, :string
 

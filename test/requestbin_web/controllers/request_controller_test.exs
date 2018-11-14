@@ -1,4 +1,4 @@
-defmodule RequestbinWeb.Controllers.RequestsTest do
+defmodule RequestbinWeb.RequestControllerTest do
   use RequestbinWeb.ConnCase
 
   alias Requestbin.Bins

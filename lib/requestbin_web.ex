@@ -40,6 +40,7 @@ defmodule RequestbinWeb do
       import RequestbinWeb.Router.Helpers
       import RequestbinWeb.ErrorHelpers
       import RequestbinWeb.Gettext
+      import RequestbinWeb.Views.Utils
     end
   end
 

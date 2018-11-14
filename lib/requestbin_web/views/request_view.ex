@@ -3,33 +3,6 @@ defmodule RequestbinWeb.RequestView do
   alias Requestbin.Bins.Request
 
   @doc """
-  Shorten the `input` string if it excedes the `length`.
-  The ellipsis is added if the string was shortened.
-  """
-  @spec shorten(String.t, integer) :: String.t
-  def shorten(input, length) do
-    if String.length(input) > length do
-      String.slice(input, 0, length) <> "…"
-    else
-      input
-    end
-  end
-
-  @doc """
-  Shorten the `input` string if it excedes the `length`.
-  The beginning of the stirng is truncated and the ellipsis 
-  is added if the string was shortened.
-  """
-  @spec shorten(String.t, integer) :: String.t
-  def shorten_beginning(input, length) do
-    if String.length(input) > length do
-      "…" <> String.slice(input, -length..-1)
-    else
-      input
-    end
-  end
-
-  @doc """
   Build a short description of the request
   """
   @spec get_request_title(Request.t) :: String.t
@@ -44,7 +17,7 @@ defmodule RequestbinWeb.RequestView do
   end
 
   @doc """
-  Display headers
+  Representation of headers
   """
   @spec display_headers(%{String.t => any}) :: Phoenix.Html.safe
   def display_headers(headers) do
@@ -52,7 +25,7 @@ defmodule RequestbinWeb.RequestView do
   end
 
   @doc """
-  Display IP address and port
+  Representation of IP address and port
   """
   @spec display_who(Request.t) :: Phoenix.Html.safe
   def display_who(%Request{ip_address: nil, port: _}), do: raw(nil)
@@ -66,4 +39,25 @@ defmodule RequestbinWeb.RequestView do
       p -> raw(address_string <> ":" <> to_string(p))
     end
   end
+
+  @doc """
+  Parse a query string into a map
+  """
+  @spec parse_query_string(String.t) :: [{String.t, String.t}]
+  def parse_query_string(query) do
+    Plug.Conn.Query.decode(query)
+  end
+
+  @doc """
+  Parse body and if successfully parsed, represent it as a table
+  """
+  @spec parse_body_and_display(Request.t) :: Phoenix.Html.safe
+  def parse_body_and_display(%Request{body: nil}), do: nil
+  def parse_body_and_display(%Request{body: body}) do
+    #TODO: parse x-www-form-urlencoded
+    #TODO: parse form-data
+    #TODO: pretty-print json
+    #TODO: pretty-print xml
+  end
+
 end
