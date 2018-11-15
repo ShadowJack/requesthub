@@ -51,13 +51,51 @@ defmodule RequestbinWeb.RequestView do
   @doc """
   Parse body and if successfully parsed, represent it as a table
   """
-  @spec parse_body_and_display(Request.t) :: Phoenix.Html.safe
-  def parse_body_and_display(%Request{body: nil}), do: nil
-  def parse_body_and_display(%Request{body: body}) do
-    #TODO: parse x-www-form-urlencoded
-    #TODO: parse form-data
-    #TODO: pretty-print json
-    #TODO: pretty-print xml
+  @spec render_body(Request.t) :: Phoenix.Html.safe
+  def render_body(%Request{body: nil}), do: nil
+  def render_body(%Request{body: ""}), do: nil
+  def render_body(%Request{body: body, headers: %{"content-type" => "application/x-www-form-urlencoded"}}) do
+    parsed = Plug.Conn.Query.decode(body)
+    ~E"""
+      Parsed x-www-form-urlencoded body:<br/>
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for {key, value} <- parsed do %>
+            <tr>
+              <td><%= key %></td>
+              <td><%= value %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    """
+  end
+  def render_body(%Request{body: body, headers: %{"content-type" => "multipart/form-data"}}) do
+      #TODO: parse form-data
+  end
+  def render_body(%Request{body: body, headers: %{"content-type" => "application/json"}}) do
+      #TODO: pretty-print json
+  end
+  def render_body(%Request{body: body}) do
+    # Content-type is not defined => return raw body
+    render_raw_body(body)
   end
 
+  @spec render_raw_body(String.t) :: Phoenix.Html.safe
+  defp render_raw_body(body) do
+    ~E"""
+    <div>
+      Raw body:
+    </div>
+    <div>
+      <%= body %>
+    </div>
+    """
+  end
 end

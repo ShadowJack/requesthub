@@ -43,5 +43,16 @@ defmodule RequestbinWeb.RequestViewTest do
       assert rendered =~ ~r/<td>\s*a\s*<\/td>\s*<td>\s*123\s*<\/td>/
     end
 
+    @tag :skip
+    test "multipart/form-data is parsed and displayed" do
+      
+    end
+
+
+    @tag :skip
+    test "json is pretty-printed" do
+      
+    end
+
   end
 end

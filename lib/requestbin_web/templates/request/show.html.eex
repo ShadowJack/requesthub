@@ -3,6 +3,8 @@
     Time: <%= @req.inserted_at %><br/>
     Who: <%= display_who(@req) %></br>
     <hr/>
+
+    <%# render query string %>
     <%= if (@req.query && String.length(@req.query) > 0) do %>
       Parsed query string:<br/>
       <table>
@@ -22,7 +24,15 @@
         </tbody>
       </table>
     <% end %>
-    Body: <%= @req.body %><br/>
+
+    <%# render body %>
+    <%# <%= if (@req.body && String.length(@req.body) > 0) do %>
+    <%#   <%= if can_parse_body(@req) do %>
+    <%#     <%= parsed when is_list(parsed) -> %>
+    <%#   <% end %>
+    <%# <% end %>
+    <%= render_body(@req) %>
+
     Headers: <%= display_headers(@req.headers) %>
   </div>
   <div class="request-details-actions">
