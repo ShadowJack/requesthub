@@ -35,6 +35,15 @@ defmodule RequestbinWeb.RequestViewTest do
       assert rendered =~ ~r/<td>\s*q\s*<\/td>\s*<td>\s*test string\s*<\/td>/
     end
 
+    test "arrays in query string are displayed correctly", %{conn: conn} do
+      req = build_request("", "", "a[]=123&a[]=test%20message")
+
+      rendered = render_to_string(RequestView, "show.html", req: req, conn: conn)
+
+      assert rendered =~ ~r/<td>\s*a\[\]\s*<\/td>\s*<td>\s*123\s*<\/td>/
+      assert rendered =~ ~r/<td>\s*a\[\]\s*<\/td>\s*<td>\s*test message\s*<\/td>/
+    end
+
     test "x-www-form-urlencoded body is parsed and displayed", %{conn: conn} do
       req = build_request("application/x-www-form-urlencoded", "a=123&b=456&c=\"test\"&d=false")
 

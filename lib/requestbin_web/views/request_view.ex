@@ -17,19 +17,67 @@ defmodule RequestbinWeb.RequestView do
   end
 
   @doc """
+  Render a key-value table
+  """
+  @spec render_key_value_table(%{String.t => String.t | [String.t]}) :: Phoenix.Html.safe
+  def render_key_value_table(map) when map == %{}, do: nil
+  def render_key_value_table(map) do
+    # get rid of internal lists
+    list = map |> Map.to_list() |> flatten_key_value_list()
+    ~E"""
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for {key, value} <- list do %>
+            <tr>
+              <td><%= key %></td>
+              <td><%= value %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    """
+  end
+
+  defp flatten_key_value_list(list) do
+    do_flatten_key_value_list(list, [])
+  end
+
+  defp do_flatten_key_value_list([], acc), do: Enum.reverse(acc)
+  defp do_flatten_key_value_list([{k, list_value} | tail], acc) when is_list(list_value) do
+    flattened = 
+      list_value 
+      |> Enum.map(fn v -> {"#{k}[]", v} end) 
+      |> Enum.reverse()
+    do_flatten_key_value_list(tail, flattened ++ acc)
+  end
+  defp do_flatten_key_value_list([head | tail], acc) do
+    do_flatten_key_value_list(tail, [head | acc])
+  end
+
+
+  ## Render parts of the request
+  #
+
+  @doc """
   Representation of headers
   """
-  @spec display_headers(%{String.t => any}) :: Phoenix.Html.safe
-  def display_headers(headers) do
+  @spec render_headers(%{String.t => any}) :: Phoenix.Html.safe
+  def render_headers(headers) do
     raw(inspect(headers))
   end
 
   @doc """
   Representation of IP address and port
   """
-  @spec display_who(Request.t) :: Phoenix.Html.safe
-  def display_who(%Request{ip_address: nil, port: _}), do: raw(nil)
-  def display_who(%Request{ip_address: %Postgrex.INET{address: addr}, port: port}) do
+  @spec render_who(Request.t) :: Phoenix.Html.safe
+  def render_who(%Request{ip_address: nil, port: _}), do: raw(nil)
+  def render_who(%Request{ip_address: %Postgrex.INET{address: addr}, port: port}) do
     address_string = 
       addr
       |> :inet_parse.ntoa()
@@ -41,11 +89,18 @@ defmodule RequestbinWeb.RequestView do
   end
 
   @doc """
-  Parse a query string into a map
+  Representation of a query string
   """
-  @spec parse_query_string(String.t) :: [{String.t, String.t}]
-  def parse_query_string(query) do
-    Plug.Conn.Query.decode(query)
+  @spec render_query_string(Request.t) :: Phoenix.Html.safe
+  def render_query_string(%Request{query: nil}), do: nil
+  def render_query_string(%Request{query: ""}), do: nil
+  def render_query_string(%Request{query: query}) do
+    parsed = Plug.Conn.Query.decode(query)
+
+    ~E"""
+    Parsed query string:<br/>
+    <%= render_key_value_table(parsed) %>
+    """
   end
 
   @doc """
@@ -58,29 +113,15 @@ defmodule RequestbinWeb.RequestView do
     parsed = Plug.Conn.Query.decode(body)
     ~E"""
       Parsed x-www-form-urlencoded body:<br/>
-      <table>
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%= for {key, value} <- parsed do %>
-            <tr>
-              <td><%= key %></td>
-              <td><%= value %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <%= render_key_value_table(parsed) %>
     """
   end
   def render_body(%Request{body: body, headers: %{"content-type" => "multipart/form-data"}}) do
-      #TODO: parse form-data
+    #TODO: parse form-data
   end
   def render_body(%Request{body: body, headers: %{"content-type" => "application/json"}}) do
-      #TODO: pretty-print json
+    #TODO: pretty-print json
+    render_raw_body(body)
   end
   def render_body(%Request{body: body}) do
     # Content-type is not defined => return raw body
