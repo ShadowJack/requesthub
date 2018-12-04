@@ -1,18 +1,33 @@
 defmodule RequestbinWeb.RequestView do
   use RequestbinWeb, :view
-  alias Requestbin.Bins.Request
+  alias Requestbin.Bins.{Request, RequestType}
 
   @doc """
   Build a short description of the request
   """
-  @spec get_request_title(Request.t) :: String.t
+  @spec get_request_title(Request.t) :: Phoenix.Html.safe
   def get_request_title(%Request{} = req) do
     title = String.upcase(req.verb) <> " /" <> shorten_beginning(req.bin_id, 4) 
 
-    if String.length(req.query) > 0 do
+    title = if String.length(req.query) > 0 do
       title <> "?" <> req.query
     else
       title
+    end
+
+    ~E"""
+    <%= title %><br/>
+    """
+  end
+
+  @doc """
+  Display a request type
+  """
+  @spec get_request_type(Reqest.t) :: Phoenix.Html.safe
+  def get_request_type(%Request{type: type_id}) do
+    case RequestType.get_type_name_by_id(type_id) do
+      :other -> nil
+      type -> to_string(type)
     end
   end
 
@@ -20,6 +35,7 @@ defmodule RequestbinWeb.RequestView do
   Render a key-value table
   """
   @spec render_key_value_table(%{String.t => String.t | [String.t]}) :: Phoenix.Html.safe
+  def render_key_value_table(nil), do: nil
   def render_key_value_table(map) when map == %{}, do: nil
   def render_key_value_table(map) do
     # get rid of internal lists
@@ -47,7 +63,6 @@ defmodule RequestbinWeb.RequestView do
   defp flatten_key_value_list(list) do
     do_flatten_key_value_list(list, [])
   end
-
   defp do_flatten_key_value_list([], acc), do: Enum.reverse(acc)
   defp do_flatten_key_value_list([{k, list_value} | tail], acc) when is_list(list_value) do
     flattened = 
@@ -109,22 +124,55 @@ defmodule RequestbinWeb.RequestView do
   @spec render_body(Request.t) :: Phoenix.Html.safe
   def render_body(%Request{body: nil}), do: nil
   def render_body(%Request{body: ""}), do: nil
-  def render_body(%Request{body: body, headers: %{"content-type" => "application/x-www-form-urlencoded"}}) do
-    parsed = Plug.Conn.Query.decode(body)
+  def render_body(%Request{body: body, parsed_body: parsed_body, type: type_id}) do
+    do_render_body(body, parsed_body, RequestType.get_type_name_by_id(type_id))
+  end
+  defp do_render_body(_, parsed_body, :urlencoded) do
     ~E"""
       Parsed x-www-form-urlencoded body:<br/>
-      <%= render_key_value_table(parsed) %>
+      <%= render_key_value_table(parsed_body) %>
     """
   end
-  def render_body(%Request{body: body, headers: %{"content-type" => "multipart/form-data"}}) do
-    #TODO: parse form-data
+  defp do_render_body(body, parsed_body, :multipart) do
+    if parsed_body == nil || parsed_body == %{} do
+      ~E"""
+      <div>Wasn't able to parse multipart/form-data</div>
+      <%= render_raw_body(body) %>
+      """
+    else
+      ~E"""
+      <div>Parsed mulitpart/from-data body:</div>
+      <div>
+      <%= render_key_value_table(parsed_body) %>
+      </div>
+      """
+    end
   end
-  def render_body(%Request{body: body, headers: %{"content-type" => "application/json"}}) do
-    #TODO: pretty-print json
-    render_raw_body(body)
+  defp do_render_body(body, _, :json) do
+    # pretty-print
+      with {:ok, map} <- Jason.decode(body),
+           {:ok, json} <- Jason.encode(map, pretty: true) do
+        ~E"""
+        Pretty-printed json body:
+        <pre>
+        <%= raw(json) %>
+        </pre>
+        <%= render_raw_body(body) %>
+        """
+      else
+        {:error, %Jason.DecodeError{data: data, position: pos, token: token}} ->
+          ~E"""
+          <div>
+          The json is invalid:
+          <div>Data: <span><=% raw(data) %></span></div>
+          <div>Position: <span><=% raw(pos) %></span></div>
+          <div>Token: <span><=% raw(token) %></span></div>
+          </div>
+          <%= render_raw_body(body) %>
+          """
+      end
   end
-  def render_body(%Request{body: body}) do
-    # Content-type is not defined => return raw body
+  defp do_render_body(body, _, _) do
     render_raw_body(body)
   end
 
@@ -134,9 +182,9 @@ defmodule RequestbinWeb.RequestView do
     <div>
       Raw body:
     </div>
-    <div>
+    <pre>
       <%= body %>
-    </div>
+    </pre>
     """
   end
 end

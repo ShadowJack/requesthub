@@ -3,9 +3,9 @@
   <div class="request p-2 m-2">
     <div class="d-flex request-header">
       <div class="flex-fill request-title">
-        <%= get_request_title(req)  %><br/>
+        <%= get_request_title(req) %>
         <%= if String.length(req.body) > 0 do %>
-          Body: <%= shorten(req.body, 50) %>
+         <%= get_request_type(req) %> body: <%= shorten(req.body, 50) %>
         <% end %>
       </div>
       <div class="request-action">

@@ -2,9 +2,9 @@ defmodule RequestbinWeb.RequestControllerTest do
   use RequestbinWeb.ConnCase
 
   alias Requestbin.Bins
-  alias Requestbin.Bins.{Bin, Request}
+  alias Requestbin.Bins.Request
 
-  setup context do
+  setup(_) do
     {:ok, bin} = Bins.create_bin(%{"name" => "Test bin"})
     
     [bin_id: bin.id]
@@ -18,7 +18,7 @@ defmodule RequestbinWeb.RequestControllerTest do
       conn
       |> put_req_header("x-header", "val1")
       |> put_req_header("x-header", "val2")
-      |> post "/bins/#{bin_id}", %{"a" => "1"}
+      |> post("/bins/#{bin_id}", %{"a" => "1"})
 
     assert redirected_to(conn) =~ "/bins/"
     req = assert_and_get_request(conn, bin_id)
@@ -29,7 +29,7 @@ defmodule RequestbinWeb.RequestControllerTest do
     conn = 
       conn
       |> put_req_header("content-type", "application/json")
-      |> post "/bins/#{bin_id}", "{\"a\": 123, \"arr\": [1,2,3]}"
+      |> post("/bins/#{bin_id}", "{\"a\": 123, \"arr\": [1,2,3]}")
 
     req = assert_and_get_request(conn, bin_id)
     assert %{"content-type" => "application/json"} = req.headers
@@ -40,7 +40,7 @@ defmodule RequestbinWeb.RequestControllerTest do
     conn = 
       conn
       |> put_req_header("content-type", "application/x-www-form-urlencoded")
-      |> post "/bins/#{bin_id}", "a=123&b=456&c=\"test\""
+      |> post("/bins/#{bin_id}", "a=123&b=456&c=\"test\"")
 
     req = assert_and_get_request(conn, bin_id)
     assert %{"content-type" => "application/x-www-form-urlencoded"} = req.headers
@@ -69,7 +69,7 @@ defmodule RequestbinWeb.RequestControllerTest do
     conn = 
       conn
       |> put_req_header("content-type", "application/xml")
-      |> post "/bins/#{bin_id}", "<html><body><b style=\"color: black\">Test</b></body></html>"
+      |> post("/bins/#{bin_id}", "<html><body><b style=\"color: black\">Test</b></body></html>")
 
     req = assert_and_get_request(conn, bin_id)
     assert %{"content-type" => "application/xml"} = req.headers
@@ -79,7 +79,7 @@ defmodule RequestbinWeb.RequestControllerTest do
   test "can create a GET request with query-string", %{bin_id: bin_id, conn: conn} do
     conn = 
       conn
-      |> get "/bins/#{bin_id}?abc=321&d=test"
+      |> get("/bins/#{bin_id}?abc=321&d=test")
 
     req = assert_and_get_request(conn, bin_id)
     assert "GET" == req.verb
@@ -90,7 +90,7 @@ defmodule RequestbinWeb.RequestControllerTest do
     conn = 
       conn
       |> put_req_header("content-type", "application/json")
-      |> patch "/bins/#{bin_id}?abc=321&d=test", "{\"a\": 1}"
+      |> patch("/bins/#{bin_id}?abc=321&d=test", "{\"a\": 1}")
 
     req = assert_and_get_request(conn, bin_id)
     assert "PATCH" == req.verb
@@ -100,7 +100,7 @@ defmodule RequestbinWeb.RequestControllerTest do
     conn = 
       conn
       |> put_req_cookie("TestCookie", "Test cookie value")
-      |> get "/bins/#{bin_id}?abc=321&d=test"
+      |> get("/bins/#{bin_id}?abc=321&d=test")
 
     req = assert_and_get_request(conn, bin_id)
     assert %{ "cookie" => "TestCookie=Test cookie value" } = req.headers

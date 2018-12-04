@@ -10,8 +10,10 @@ defmodule Requestbin.Bins.Request do
     field :query, :string
     field :headers, :map
     field :body, :string
+    field :parsed_body, :map
     field :ip_address, Requestbin.PostgresTypes.INET
     field :port, :integer
+    field :type, :integer
 
     timestamps()
   end
@@ -27,9 +29,12 @@ defmodule Requestbin.Bins.Request do
       bin_id: bin_id, 
       verb: verb, 
       body: read_body(conn),
+      parsed_body: read_parsed_body(conn),
       query: query,
       headers: cast_headers(headers),
-      port: peer_data[:port])
+      port: peer_data[:port],
+      type: Requestbin.Bins.RequestType.detect_type(conn)
+    )
     |> cast(%{"ip_address" => peer_data}, [:ip_address])
     |> validate_required([:bin_id, :verb])
     |> foreign_key_constraint(:bin_id)
@@ -67,6 +72,14 @@ defmodule Requestbin.Bins.Request do
       {:ok, body, _} -> body
       {:more, body, _} -> body
     end
+  end
+
+  @spec read_parsed_body(Plug.Conn.t) :: Map.t
+  defp read_parsed_body(%Plug.Conn{body_params: %Plug.Conn.Unfetched{}}) do
+    nil
+  end
+  defp read_parsed_body(%Plug.Conn{body_params: parsed_body}) do
+    parsed_body
   end
 
   @spec cast_headers([{String.t, String.t}]) :: %{ String.t => String.t | [String.t] } 
