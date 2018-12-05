@@ -1,22 +1,4 @@
 <h2>Latest requests for bin <%= @bin_id %></h2> 
 <%= for {req, idx} <- Enum.with_index(@reqs) do %>
-  <div class="request p-2 m-2">
-    <div class="d-flex request-header">
-      <div class="flex-fill request-title">
-        <%= get_request_title(req) %>
-        <%= if String.length(req.body) > 0 do %>
-         <%= get_request_type(req) %> body: <%= shorten(req.body, 50) %>
-        <% end %>
-      </div>
-      <div class="request-action">
-        <a class="request-toggle-details" data-toggle="collapse" href="#requestDetails_<%= req.id %>" role="button" aria-expanded="<%= if idx == 0, do: "true", else: "false" %>">
-          <span class="text-collapsed">Expand</span>
-          <span class="text-expanded">Collapse</span>
-        </a>
-      </div>
-    </div>
-    <div id="requestDetails_<%= req.id%>" class="request-details-container collapse<%= if idx == 0, do: " show" %> w-auto">
-      <%= render(RequestbinWeb.RequestView, "show.html", req: req, conn: @conn) %>
-    </div>
-  </div>
+  <%= render RequestbinWeb.RequestView, "show.html", req: req, idx: idx, conn: @conn %>
 <% end %>

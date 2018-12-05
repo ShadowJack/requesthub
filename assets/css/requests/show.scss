@@ -1,10 +1,88 @@
-.request-details {
-  display: flex;
-  font-size: 1.1rem;
-  justify-content: space-between;
+@import '../colors';
 
-  .request-details-actions {
-    display: flex;
-    flex-direction: column-reverse;
+@mixin verb($color) {
+  background-color: lighten($color, 30%);
+
+  .request-details-container {
+    background-color: lighten($color, 40%);
   }
 }
+
+.request {
+  border: 1px solid $color4;
+  border-radius: 0.5rem;
+
+  .request-title {
+    font-size: 1.1rem;
+  }
+
+  .request-action {
+    display: flex;
+    align-items: center;
+
+    .request-toggle-details {
+      color: lighten($text-color, 25%);
+    }
+
+    .request-toggle-details[aria-expanded=false] .text-expanded {
+      display: none;
+    }
+    .request-toggle-details[aria-expanded=true] .text-collapsed {
+      display: none;
+    }
+  }
+
+  .request-details-container {
+    margin-top: 1rem;
+    padding: 1rem;
+
+    background-color: lighten($bgcolor, 12%);
+    border-radius: 0.5rem;
+
+    .request-details {
+      display: flex;
+      font-size: 1.1rem;
+      justify-content: space-between;
+
+      .request-details-actions {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+    }
+  }
+
+  // default color
+  // @include verb($color-other);
+
+  &.verb-post
+  {
+    @include verb($color-post);
+  }
+  &.verb-put
+  {
+    @include verb($color-put);
+  }
+  &.verb-delete
+  {
+    @include verb($color-delete);
+  }
+  &.verb-get
+  {
+    @include verb($color-get);
+  }
+  &.verb-patch
+  {
+    @include verb($color-patch);
+  }
+  &.verb-head
+  {
+    @include verb($color-head);
+  }
+  &.verb-options
+  {
+    @include verb($color-options);
+  }
+}
+
+
+
