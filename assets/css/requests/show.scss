@@ -1,7 +1,7 @@
 @import '../colors';
 
 @mixin verb($color) {
-  background-color: lighten($color, 30%);
+  background-color: lighten($color, 35%);
 
   .request-details-container {
     background-color: lighten($color, 40%);
