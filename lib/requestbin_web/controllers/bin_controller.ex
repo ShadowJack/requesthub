@@ -9,9 +9,7 @@ defmodule RequestbinWeb.BinController do
       {:ok, bin} ->
         conn
         |> put_flash(:info, "Bin #{bin.id} is created successfully.")
-        # TODO: redirect to bin_requests_index
-        # |> redirect(to: bin_path(conn, :index, bin))
-        |> redirect(to: "/")
+        |> redirect(to: request_path(conn, :index, bin))
       {:error, %Ecto.Changeset{} = _changeset} ->
         conn
         |> put_flash(:error, "Something went wrong, please try again later")
