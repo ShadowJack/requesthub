@@ -9,7 +9,7 @@ defmodule RequestbinWeb.RequestView do
   def get_request_title(%Request{} = req) do
     title = String.upcase(req.verb) <> " /" <> shorten_beginning(req.bin_id, 4) 
 
-    title = if String.length(req.query) > 0 do
+    title = if String.length(req.query || "") > 0 do
       title <> "?" <> req.query
     else
       title
