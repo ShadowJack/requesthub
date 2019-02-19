@@ -2,4 +2,10 @@
   <h3>Welcome to the Requestbin.</h3>
 
   <%= button("Create a new bin", to: "/bins", class: "btn btn-primary mt-3") %>
+
+  <ul>
+    <%= for bin_id <- @bins do %>
+      <%= link(bin_id, to: request_path(@conn, :index, bin_id)) %>
+    <% end %>
+  </ul>
 </div>
