@@ -9,11 +9,15 @@ defmodule RequestbinWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :auth do
+    plug Requestbin.Users.Pipeline
+  end
+
   # specific action to save any request that is coming to the bin
   match :*, "/bins/:bin_id", RequestbinWeb.RequestController, :create
 
   scope "/", RequestbinWeb do
-    pipe_through :browser # Use the default browser stack
+    pipe_through [:browser, :auth]
 
     get "/", HomepageController, :index
 
@@ -24,6 +28,14 @@ defmodule RequestbinWeb.Router do
     get "/bins/:bin_id/requests", RequestController, :index
     get "/bins/:bin_id/requests/:req_id", RequestController, :show
     delete "/bins/:bin_id/requests/:req_id", RequestController, :delete
+
+    # users
+    resources "/users", UserController, except: [:index, :delete]
+
+    # login/logout
+    get "/login", SessionController, :new
+    post "/login", SessionController, :login
+    post "/logout", SessionController, :logout
 
     # catch-all that will display 404 error
     match :*, "/*path", HomepageController, :not_found

@@ -29,6 +29,16 @@ config :requestbin, Requestbin.Repo,
 config :phoenix, :format_encoders, 
   json: Jason
 
+# Config authentication
+config :requestbin, Requestbin.Users.Guardian,
+       issuer: "requestbin",
+       secret_key: "El5xi4AMBrM2IeXLAgTm/HbGSIbrNl0rzlyTHYU/9azRRtV1CkHy/cL4kEM93EoX"
+
+# encription library
+config :argon2_elixir,
+  t_cost: 1,
+  m_cost: 14 
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
