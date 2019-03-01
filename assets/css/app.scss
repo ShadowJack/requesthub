@@ -6,3 +6,12 @@
 body {
   color: $text-color !important;
 }
+
+.alerts .alert:empty {
+  display: none;
+}
+
+a.unstyled-link {
+  color: inherit;
+  text-decoration: none;
+}

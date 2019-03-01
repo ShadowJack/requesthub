@@ -32,7 +32,7 @@ defmodule RequestbinWeb.SessionController do
 
   def logout(conn, _) do
     conn
-    |> Guardian.Plug.sign_out(Requestbin.Users.Guardian)
+    |> Guardian.Plug.sign_out(Requestbin.Users.Guardian, [])
     |> redirect(to: homepage_path(conn, :index))
   end
 end

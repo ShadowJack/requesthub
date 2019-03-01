@@ -14,24 +14,25 @@ defmodule RequestbinWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Users.create_user(user_params) do
       conn
-      |> put_status(:created)
       |> Guardian.Plug.sign_in(Requestbin.Users.Guardian, user)
-      |> put_resp_header("location", user_path(conn, :show, user))
-      |> render("show.json", user: user)
+      |> redirect(to: homepage_path(conn, :index))
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    user = Users.get_user(id)
-    render(conn, "show.json", user: user)
-  end
-
-  def edit(conn, _) do
+  def edit(conn, %{"id" => user_id}) do
     case Guardian.Plug.current_resource(conn) do
       nil ->
-        redirect(conn, to: session_path(conn, :new))
+        conn
+        |> put_flash(:error, "Please log-in")
+        |> redirect(to: session_path(conn, :new))
       user ->
-        render(conn, "edit.html", user: Users.change_user(user))
+        if (to_string(user.id) != user_id) do
+          conn
+          |> put_flash(:error, "Access is denied")
+          |> redirect(to: homepage_path(conn, :index))
+        else
+          render(conn, "edit.html", user: Users.change_user(user), user_id: user.id)
+        end
     end
   end
 

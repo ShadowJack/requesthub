@@ -13,18 +13,27 @@
 
   <body>
     <div class="container">
-      <header class="header">
-        <nav role="navigation">
-          <h1>Requestbin</h1>
-        </nav>
-      </header>
+      <div class="row header">
+        <div class="col-9">
+          <h3><%= link "Requestbin", to: homepage_path(@conn, :index), class: "unstyled-link" %></h3>
+        </div>
+        <div class="col-3">
+          <%= render RequestbinWeb.SessionView, "navigation.html", Map.put(assigns, :current_user, Guardian.Plug.current_resource(@conn)) %>
+        </div>
+      </div>
 
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <div class="row alerts">
+        <div class="col">
+          <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+          <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+        </div>
+      </div>
 
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
+      <div class="row main" role="main">
+        <div class="col">
+          <%= render @view_module, @view_template, assigns %>
+        </div>
+      </div>
 
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>

@@ -30,7 +30,7 @@ defmodule RequestbinWeb.Router do
     delete "/bins/:bin_id/requests/:req_id", RequestController, :delete
 
     # users
-    resources "/users", UserController, except: [:index, :delete]
+    resources "/users", UserController, except: [:index, :show, :delete]
 
     # login/logout
     get "/login", SessionController, :new
