@@ -8,8 +8,9 @@ defmodule Requestbin.Users.User do
     field :email, :string
     field :first_name, :string
     field :last_name, :string
-    # field :password, :string, virtual: true
     field :password_hash, :binary
+
+    many_to_many :bins, Requestbin.Bins.Bin, join_through: "users_bins"
 
     timestamps()
   end

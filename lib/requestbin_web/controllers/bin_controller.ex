@@ -3,16 +3,16 @@ defmodule RequestbinWeb.BinController do
 
   alias Requestbin.Bins
 
-  def create(conn, _) do
-    case Bins.create_bin() do
+  def create(conn, attrs) do
+    case Bins.create_bin(attrs, Guardian.Plug.current_resource(conn)) do
       {:ok, bin} ->
         conn
-        |> put_flash(:info, "Bin #{bin.id} is created successfully.")
+        |> put_flash(:info, "Bin #{bin.name || bin.id} is created successfully.")
         |> put_bin_to_session(bin.id)
         |> redirect(to: request_path(conn, :index, bin))
       {:error, %Ecto.Changeset{} = _changeset} ->
         conn
-        |> put_flash(:error, "Something went wrong, please try again later")
+        |> put_flash(:error, "Something went wrong, please try again later.")
         |> redirect(to: "/")
     end
   end

@@ -20,10 +20,10 @@ defmodule Requestbin.Bins do
       {:ok, %Bin{name: value}}
 
   """
-  @spec create_bin(%{String.t => any}) :: {:ok, Bin.t} | {:error, Ecto.Changeset.t}
-  def create_bin(attrs \\ %{}) do
+  @spec create_bin(%{String.t => any}, Reqeustbin.Users.User.t) :: {:ok, Bin.t} | {:error, Ecto.Changeset.t}
+  def create_bin(attrs \\ %{}, user \\ nil) do
     %Bin{}
-    |> Bin.changeset(attrs)
+    |> Bin.changeset_for_insert(attrs, user)
     |> Repo.insert()
   end
 
@@ -41,7 +41,7 @@ defmodule Requestbin.Bins do
       ** (Ecto.NoResultsError)
 
   """
-  @spec get_bin!(String.t) :: Bin.t | none
+  @spec get_bin!(Bin.bin_id) :: Bin.t | none
   def get_bin!(id), do: Repo.get!(Bin, id)
 
   @doc """
