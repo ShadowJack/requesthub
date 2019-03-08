@@ -7,6 +7,7 @@ defmodule Requestbin.Bins do
   alias Requestbin.Repo
 
   alias Requestbin.Bins.{Bin, Request}
+  alias Requestbin.Users.User
 
   ###
   # Bins

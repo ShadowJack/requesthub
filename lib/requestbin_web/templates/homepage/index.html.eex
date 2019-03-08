@@ -7,10 +7,21 @@
   <%= button("Create public bin", to: "/bins?private=false", class: "btn btn-primary mt-3", data: [private: false]) %>
 </div>
 
-<%= if not Enum.empty?(@bins) do %>
+<%= if not Enum.empty?(@session_bins) do %>
   <h4>Recent bins:</h4>
   <ul class="list-group list-group-flush">
-    <%= for bin_id <- @bins do %>
+    <%= for bin_id <- @session_bins do %>
+      <li class="list-group-item">
+        <%= link(bin_id, to: request_path(@conn, :index, bin_id)) %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= if not Enum.empty?(@user_bins) do %>
+  <h4>Your bins:</h4>
+  <ul class="list-group list-group-flush">
+    <%= for bin_id <- @user_bins do %>
       <li class="list-group-item">
         <%= link(bin_id, to: request_path(@conn, :index, bin_id)) %>
       </li>

@@ -82,4 +82,26 @@ defmodule Requestbin.Users do
   def change_user(%User{} = user) do
     User.changeset(user)
   end
+
+
+  ##
+  # Bins
+  #
+
+  @doc """
+  Returns a list of bin_ids for the user
+
+  ## Examples
+
+      iex> list_bins(%User{})
+      ["abc", ...]
+
+  """
+  @spec list_bins(User.t) :: [String.t] | none
+  def list_bins(%User{} = user) do
+    case Repo.preload(user, :bins) do
+      nil -> []
+      %User{bins: bins} -> Enum.map(bins, fn b -> b.id end)
+    end
+  end
 end
