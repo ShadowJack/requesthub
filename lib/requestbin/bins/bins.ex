@@ -148,4 +148,42 @@ defmodule Requestbin.Bins do
   def delete_request(%Request{} = request) do
     Repo.delete(request)
   end
+
+  @doc """
+  Check if access to the bin is allowed
+  """
+  @spec access_allowed?(Bin.bin_id, User.t) :: boolean
+  def access_allowed?(bin_id, user) do
+    user_ids = get_bin_owners(bin_id)
+
+    cond do
+      Enum.empty?(user_ids) -> 
+        # public bin can be accessed by anyone
+        true 
+      user == nil -> 
+        # unauthorized access
+        false
+      Enum.any?(user_ids, fn x -> x == user.id end) -> 
+        # accessed by ownder
+        true
+      :otherwise -> 
+        # accessed by user that is not an owner
+        false
+    end
+  end
+
+  @spec get_bin_owners(Bin.bin_id) :: [User.user_id]
+  defp get_bin_owners(bin_id) do
+    Repo.all(
+      from b in Bin, 
+      join: u in "users_bins", on: u.bin_id == b.id,
+      where: b.id == ^bin_id,
+      select: u.user_id
+
+      # join: u in assoc(b, :users),
+      # where: b.id == ^bin_id, 
+      # preload: [users: u],
+      # select: u.id
+    )
+  end
 end

@@ -6,6 +6,7 @@ defmodule RequestbinWeb.RequestController do
 
   plug :fetch_session when action in [:create]
   plug :fetch_flash when action in [:create]
+  plug :check_access_allowed
 
   def index(conn, %{"bin_id" => bin_id}) do
     reqs = Bins.list_requests(bin_id)
@@ -57,5 +58,18 @@ defmodule RequestbinWeb.RequestController do
     conn
     |> put_flash(flash_key, flash_message)
     |> redirect(to: request_path(conn, :index, bin_id))
+  end
+
+  defp check_access_allowed(conn, _) do
+    with bin_id <- Map.get(conn.path_params, "bin_id"),
+         true <- Bins.access_allowed?(bin_id, Guardian.Plug.current_resource(conn)) do
+      conn
+    else
+      _ ->
+        conn
+        |> put_flash(:error, "Access denied")
+        |> put_status(403)
+        |> halt()
+    end
   end
 end

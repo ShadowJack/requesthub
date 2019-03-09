@@ -43,7 +43,8 @@ defmodule Requestbin.Mixfile do
       {:plug_cowboy, "~> 1.0"},
       {:jason, "~> 1.1"},
       {:guardian, "~> 1.0"},
-      {:argon2_elixir, "~> 2.0"}
+      {:argon2_elixir, "~> 2.0"},
+      {:ex_machina, "~> 2.3", only: :test}
     ]
   end
 

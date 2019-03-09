@@ -2,6 +2,8 @@ defmodule Requestbin.Users.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type user_id :: integer
+
   @primary_key {:id, :id, autogenerate: true}
   schema "users" do
     field :email, :string
