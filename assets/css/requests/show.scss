@@ -12,6 +12,18 @@
   border: 1px solid $color4;
   border-radius: 0.5rem;
 
+  .request-toggle-details {
+    cursor: pointer;
+    color: $text-color;
+    text-decoration: none;
+  }
+  .request-toggle-details[aria-expanded=false] .text-expanded {
+    display: none;
+  }
+  .request-toggle-details[aria-expanded=true] .text-collapsed {
+    display: none;
+  }
+
   .request-title {
     font-size: 1.1rem;
   }
@@ -19,18 +31,9 @@
   .request-action {
     display: flex;
     align-items: center;
-
-    .request-toggle-details {
-      color: lighten($text-color, 25%);
-    }
-
-    .request-toggle-details[aria-expanded=false] .text-expanded {
-      display: none;
-    }
-    .request-toggle-details[aria-expanded=true] .text-collapsed {
-      display: none;
-    }
+    color: lighten($text-color, 25%);
   }
+
 
   .request-details-container {
     margin-top: 1rem;

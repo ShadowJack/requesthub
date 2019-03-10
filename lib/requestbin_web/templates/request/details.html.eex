@@ -1,18 +1,22 @@
 <div class="request verb-<%= String.downcase(@req.verb) %> p-2 m-2">
-  <div class="d-flex request-header">
-    <div class="flex-fill request-title">
-      <%= get_request_title(@req) %>
-      <%= if String.length(@req.body) > 0 do %>
-       <%= get_request_type(@req) %> body: <%= shorten(@req.body, 50) %>
-      <% end %>
+  <a class="request-toggle-details" data-toggle="collapse" href="#requestDetails_<%= @req.id %>" role="button" aria-expanded="<%= if @is_collapsed, do: "false", else: "true" %>">
+    <div class="d-flex request-header">
+        <div class="flex-fill request-title">
+          <%= get_request_title(@req) %>
+          <%= if String.length(@req.body) > 0 do %>
+           <%= get_request_type(@req) %> body: <%= shorten(@req.body, 50) %>
+          <% end %>
+        </div>
+        <div class="request-action pl-1 pr-1">
+          <span class="text-collapsed">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+          </span>
+          <span class="text-expanded">
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </div>
     </div>
-    <div class="request-action">
-      <a class="request-toggle-details" data-toggle="collapse" href="#requestDetails_<%= @req.id %>" role="button" aria-expanded="<%= if @is_collapsed, do: "false", else: "true" %>">
-        <span class="text-collapsed">Expand</span>
-        <span class="text-expanded">Collapse</span>
-      </a>
-    </div>
-  </div>
+  </a>
   <div id="requestDetails_<%= @req.id %>" class="request-details-container collapse<%= if !@is_collapsed, do: " show" %> w-auto">
     <div class="request-details">
       <div>

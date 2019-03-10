@@ -31,19 +31,19 @@ defmodule Requestbin.Bins do
   @doc """
   Gets a single bin.
 
-  Raises `Ecto.NoResultsError` if the Bin does not exist.
+  Returns `nil` if bin doesn't exist
 
   ## Examples
 
-      iex> get_bin!("123")
+      iex> get_bin("123")
       %Bin{}
 
-      iex> get_bin!("456")
-      ** (Ecto.NoResultsError)
+      iex> get_bin("456")
+      nil
 
   """
-  @spec get_bin!(Bin.bin_id) :: Bin.t | none
-  def get_bin!(id), do: Repo.get!(Bin, id)
+  @spec get_bin(Bin.bin_id) :: Bin.t | nil
+  def get_bin(id), do: Repo.get(Bin, id)
 
   @doc """
   Gets several bins.
@@ -100,20 +100,6 @@ defmodule Requestbin.Bins do
     %Request{}
     |> Request.changeset(conn)
     |> Repo.insert()
-  end
-
-  @doc """
-  Returns the list of requests in a specific bin.
-
-  ## Examples
-
-      iex> list_requests("123")
-      [%Request{}, ...]
-
-  """
-  @spec list_requests(String.t) :: [Request.t] | none
-  def list_requests(bin_id) when is_binary(bin_id) do
-    Repo.all(from r in Request, where: r.bin_id == ^bin_id, order_by: [desc: r.inserted_at])
   end
 
   @doc """

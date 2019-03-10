@@ -3,15 +3,19 @@ defmodule RequestbinWeb.RequestController do
 
   alias Requestbin.Bins
   alias Requestbin.Bins.Request
+  alias Requestbin.Repo
 
   plug :fetch_session when action in [:create]
   plug :fetch_flash when action in [:create]
   plug :check_access_allowed
 
   def index(conn, %{"bin_id" => bin_id}) do
-    reqs = Bins.list_requests(bin_id)
-
-    render(conn, "index.html", reqs: reqs, bin_id: bin_id)
+    bin = bin_id |> Bins.get_bin() |> Repo.preload(:requests)
+    if bin == nil do
+      put_status(conn, :not_found)
+    else
+      render(conn, "index.html", bin: bin)
+    end
   end
 
   def create(conn, _) do

@@ -28,7 +28,7 @@
       <ul class="list-group list-group-flush">
         <%= for bin <- @user_bins do %>
           <li class="list-group-item">
-            <%= link(format_bin_title(bin), to: request_path(@conn, :index, bin.id)) %>
+            <%= link(RequestbinWeb.BinView.format_bin_title(bin), to: request_path(@conn, :index, bin.id)) %>
           </li>
         <% end %>
       </ul>
@@ -41,7 +41,7 @@
       <ul class="list-group list-group-flush">
         <%= for bin <- @session_bins do %>
           <li class="list-group-item">
-            <%= link(format_bin_title(bin), to: request_path(@conn, :index, bin.id)) %>
+            <%= link(RequestbinWeb.BinView.format_bin_title(bin), to: request_path(@conn, :index, bin.id)) %>
           </li>
         <% end %>
       </ul>
