@@ -13,11 +13,11 @@
 
   <body>
     <div class="container">
-      <div class="row header">
-        <div class="col-9">
+      <div class="row header mt-1">
+        <div class="col-5">
           <h3><%= link "Requestbin", to: homepage_path(@conn, :index), class: "unstyled-link" %></h3>
         </div>
-        <div class="col-3">
+        <div class="col-7 text-right pt-1">
           <%= render RequestbinWeb.SessionView, "navigation.html", Map.put(assigns, :current_user, Guardian.Plug.current_resource(@conn)) %>
         </div>
       </div>

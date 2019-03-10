@@ -46,6 +46,23 @@ defmodule Requestbin.Bins do
   def get_bin!(id), do: Repo.get!(Bin, id)
 
   @doc """
+  Gets several bins.
+
+  ## Examples
+
+      iex> get_bins(["123"])
+      [%Bin{}]
+
+      iex> get_bins(["456"])
+      []
+
+  """
+  @spec get_bins([Bin.bin_id]) :: [Bin.t]
+  def get_bins(ids) do
+    Repo.all(from b in Bin, where: b.id in ^ids)
+  end
+
+  @doc """
   Deletes a Bin.
 
   ## Examples

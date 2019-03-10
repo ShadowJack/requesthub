@@ -1,8 +1,8 @@
 <%= if @current_user do %>
-  <%= button "Logout", to: session_path(@conn, :logout), method: :post %>
-  <%= link "Profile", to: user_path(@conn, :edit, @current_user) %>
+  <%= link "Profile", to: user_path(@conn, :edit, @current_user), class: "mr-2 align-middle" %>
+  <%= button "Logout", to: session_path(@conn, :logout), method: :post, class: "btn btn-light btn-sm" %>
 <% else %>
-  <%= link "Sign up", to: user_path(@conn, :new) %>
+  <%= link "Sign up", to: user_path(@conn, :new), class: "btn btn-primary btn-sm" %>
   or
-  <%= link "Login", to: session_path(@conn, :new) %>
+  <%= link "Login", to: session_path(@conn, :new), class: "btn btn-light btn-sm" %>
 <% end %>

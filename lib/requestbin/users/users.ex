@@ -7,6 +7,7 @@ defmodule Requestbin.Users do
   alias Requestbin.Repo
 
   alias Requestbin.Users.User
+  alias Requestbin.Bins.Bin
 
 
   @doc """
@@ -89,19 +90,19 @@ defmodule Requestbin.Users do
   #
 
   @doc """
-  Returns a list of bin_ids for the user
+  Returns a list of bins for the user
 
   ## Examples
 
       iex> list_bins(%User{})
-      ["abc", ...]
+      [%Bin{}, ...]
 
   """
-  @spec list_bins(User.t) :: [String.t] | none
+  @spec list_bins(User.t) :: [Bin.t] | none
   def list_bins(%User{} = user) do
     case Repo.preload(user, :bins) do
       nil -> []
-      %User{bins: bins} -> Enum.map(bins, fn b -> b.id end)
+      %User{bins: bins} -> bins
     end
   end
 end
