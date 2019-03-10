@@ -1,10 +1,13 @@
 <div class="text-center">
-  <h3>Welcome to the Requestbin.</h3>
+  <%= form_for @conn, bin_path(@conn, :create), [as: :bin], fn f -> %>
+    <p><%= text_input(f, :name, placeholder: "Bin name") %> </p>
 
-  <%= if Guardian.Plug.current_resource(@conn) do %>
-    <%= button("Create private bin", to: "/bins?private=true", class: "btn btn-warning mt-3", data: [private: true]) %>
+    <%= if Guardian.Plug.current_resource(@conn) do %>
+      <%= submit "Create private bin", formaction: "/bins?private=true", class: "btn btn-warning mt-3" %>
+    <% end %>
+    <%= submit "Create public bin", formaction: "/bins?private=false", class: "btn btn-primary mt-3" %>
   <% end %>
-  <%= button("Create public bin", to: "/bins?private=false", class: "btn btn-primary mt-3", data: [private: false]) %>
+
 </div>
 
 <%= if not Enum.empty?(@session_bins) do %>

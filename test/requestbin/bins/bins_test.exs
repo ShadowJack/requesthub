@@ -2,23 +2,15 @@ defmodule Requestbin.BinsTest do
   use RequestbinWeb.ConnCase
 
   alias Requestbin.Bins
+  alias Requestbin.Test.Factory
 
   describe "bins" do
     alias Requestbin.Bins.Bin
 
     @valid_attrs %{"name" => "Test bin"}
 
-    def bin_fixture(attrs \\ %{}) do
-      {:ok, bin} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Bins.create_bin()
-
-      bin
-    end
-
     test "get_bin!/1 returns the bin with given id" do
-      bin = bin_fixture()
+      bin = Factory.insert(:bin)
       assert Bins.get_bin!(bin.id) == bin
     end
 
@@ -27,7 +19,7 @@ defmodule Requestbin.BinsTest do
     end
 
     test "delete_bin/1 deletes the bin" do
-      bin = bin_fixture()
+      bin = Factory.insert(:bin)
       assert {:ok, %Bin{}} = Bins.delete_bin(bin)
       assert_raise Ecto.NoResultsError, fn -> Bins.get_bin!(bin.id) end
     end
@@ -37,7 +29,7 @@ defmodule Requestbin.BinsTest do
     alias Requestbin.Bins.Request
 
     setup context do
-      bin = bin_fixture()
+      bin = Factory.insert(:bin)
 
       conn = 
         context.conn

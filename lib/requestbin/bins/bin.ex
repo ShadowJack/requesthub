@@ -16,9 +16,10 @@ defmodule Requestbin.Bins.Bin do
   @doc """
   A changeset for a new bin
   """
-  def changeset_for_insert(bin, attrs \\ %{}, user) do
+  def changeset_for_insert(bin, attrs, user) do
+    bin_attrs = Map.get(attrs, "bin", %{})
     bin
-    |> cast(attrs, [:name])
+    |> cast(bin_attrs, [:name])
     |> assign_user(attrs, user)
   end
 

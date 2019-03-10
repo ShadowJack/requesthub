@@ -22,7 +22,7 @@ defmodule Requestbin.Bins do
 
   """
   @spec create_bin(%{String.t => any}, Reqeustbin.Users.User.t) :: {:ok, Bin.t} | {:error, Ecto.Changeset.t}
-  def create_bin(attrs \\ %{}, user \\ nil) do
+  def create_bin(attrs, user \\ nil) do
     %Bin{}
     |> Bin.changeset_for_insert(attrs, user)
     |> Repo.insert()
@@ -179,11 +179,6 @@ defmodule Requestbin.Bins do
       join: u in "users_bins", on: u.bin_id == b.id,
       where: b.id == ^bin_id,
       select: u.user_id
-
-      # join: u in assoc(b, :users),
-      # where: b.id == ^bin_id, 
-      # preload: [users: u],
-      # select: u.id
     )
   end
 end

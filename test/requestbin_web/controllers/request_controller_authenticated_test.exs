@@ -1,27 +1,13 @@
 defmodule RequestbinWeb.RequestControllerAuthenticatedTest do
   use RequestbinWeb.ConnCase
 
-  alias Requestbin.Test.Factory
-
-  @signing_opts Plug.Session.init([
-    store: :cookie,
-    key: "secretkey",
-    encryption_salt: "encrypted cookie salt",
-    signing_salt: "signing salt",
-    encrypt: false
-  ])
+  alias Requestbin.Test.{AuthenticationHelpers, Factory}
 
   setup(ctx) do
     bin = Factory.insert(:private_bin)
     user = List.first(bin.users)
 
-    # authenticate a user
-    conn = ctx.conn
-    |> Plug.Session.call(@signing_opts)
-    |> Plug.Conn.fetch_session()
-    |> Guardian.Plug.sign_in(Requestbin.Users.Guardian, user)
-    |> Guardian.Plug.VerifySession.call([])
-    
+    conn = AuthenticationHelpers.authenticate(ctx.conn, user)
     [bin_id: bin.id, conn: conn, user: user]
   end
 
