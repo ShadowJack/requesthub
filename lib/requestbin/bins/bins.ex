@@ -46,6 +46,25 @@ defmodule Requestbin.Bins do
   def get_bin(id), do: Repo.get(Bin, id)
 
   @doc """
+  Gets a single bin with preloaded requests.
+
+  Returns `nil` if the bin doesn't exist
+
+  ## Examples
+
+      iex> get_bin("123")
+      %Bin{requests: [%Request{}]}
+
+      iex> get_bin("456")
+      nil
+  """
+  @spec get_bin_with_requests(Bin.bin_id) :: Bin.t
+  def get_bin_with_requests(bin_id) do
+    get_bin(bin_id)
+    |> Repo.preload(requests: (from r in Request, order_by: [desc: r.inserted_at]))
+  end
+
+  @doc """
   Gets several bins.
 
   ## Examples

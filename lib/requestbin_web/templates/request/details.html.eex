@@ -1,11 +1,8 @@
-<div class="request verb-<%= String.downcase(@req.verb) %> p-2 m-2">
+<div class="request verb-<%= String.downcase(@req.verb) %> mt-2 mb-2"">
   <a class="request-toggle-details" data-toggle="collapse" href="#requestDetails_<%= @req.id %>" role="button" aria-expanded="<%= if @is_collapsed, do: "false", else: "true" %>">
-    <div class="d-flex request-header">
+    <div class="d-flex request-header p-2">
         <div class="flex-fill request-title">
-          <%= get_request_title(@req) %>
-          <%= if String.length(@req.body) > 0 do %>
-           <%= get_request_type(@req) %> body: <%= shorten(@req.body, 50) %>
-          <% end %>
+          <%= get_request_summary(@req) %> 
         </div>
         <div class="request-action pl-1 pr-1">
           <span class="text-collapsed">
@@ -17,7 +14,7 @@
         </div>
     </div>
   </a>
-  <div id="requestDetails_<%= @req.id %>" class="request-details-container collapse<%= if !@is_collapsed, do: " show" %> w-auto">
+  <div id="requestDetails_<%= @req.id %>" class="request-details-container m-2 collapse<%= if !@is_collapsed, do: " show" %> w-auto">
     <div class="request-details">
       <div>
         Time: <%= @req.inserted_at %><br/>

@@ -10,7 +10,7 @@ defmodule RequestbinWeb.RequestController do
   plug :check_access_allowed
 
   def index(conn, %{"bin_id" => bin_id}) do
-    bin = bin_id |> Bins.get_bin() |> Repo.preload(:requests)
+    bin = Bins.get_bin_with_requests(bin_id)
     if bin == nil do
       put_status(conn, :not_found)
     else

@@ -1,4 +1,4 @@
-<h4>Latest requests for "<%= RequestbinWeb.BinView.format_bin_title(@bin) %>"</h4> 
+<h4>Latest requests for /<%= @bin.id %></h4> 
 <%= for {req, id_in_list} <- Enum.with_index(@bin.requests) do %>
   <%= render RequestbinWeb.RequestView, "details.html", req: req, is_collapsed: id_in_list != 0, conn: @conn %>
 <% end %>

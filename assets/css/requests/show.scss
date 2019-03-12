@@ -24,14 +24,21 @@
     display: none;
   }
 
-  .request-title {
-    font-size: 1.1rem;
-  }
+  .request-header {
+    .request-title {
+      font-size: 1.1rem;
+      word-break: break-word;
 
-  .request-action {
-    display: flex;
-    align-items: center;
-    color: lighten($text-color, 25%);
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    .request-action {
+      display: flex;
+      align-items: center;
+      color: lighten($text-color, 25%);
+    }
   }
 
 

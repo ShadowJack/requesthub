@@ -3,32 +3,41 @@ defmodule RequestbinWeb.RequestView do
   alias Requestbin.Bins.{Request, RequestType}
 
   @doc """
-  Build a short description of the request
+  Build a request summary
   """
-  @spec get_request_title(Request.t) :: Phoenix.Html.safe
-  def get_request_title(%Request{} = req) do
-    title = String.upcase(req.verb) <> " /" <> shorten_beginning(req.bin_id, 4) 
+  @spec get_request_summary(Reqest.t) :: Phoenix.Html.safe
+  def get_request_summary(%Request{verb: verb, type: type_id, body: body, query: query}) do
+    verb_string = String.upcase(verb)
 
-    title = if String.length(req.query || "") > 0 do
-      title <> "?" <> req.query
-    else
-      title
-    end
-
-    ~E"""
-    <%= title %><br/>
-    """
-  end
-
-  @doc """
-  Display a request type
-  """
-  @spec get_request_type(Reqest.t) :: Phoenix.Html.safe
-  def get_request_type(%Request{type: type_id}) do
-    case RequestType.get_type_name_by_id(type_id) do
+    type_string = case RequestType.get_type_name_by_id(type_id) do
       :other -> nil
       type -> to_string(type)
     end
+
+    query_string = if String.length(query || "") > 0 do
+      shorten(query, 50)
+    else
+      nil
+    end
+
+    body_string = if String.length(body || "") > 0 do
+      shorten(body, 50)
+    else
+      nil
+    end
+
+    ~E"""
+    <p><%= verb_string %></p>
+    <%= if type_string do %>
+      <p><%= type_string %></p>
+    <%= end %>
+    <%= if query_string do %>
+      <p>query: <%= query_string %></p>
+    <%= end %>
+    <%= if body_string do %>
+      <p>body: <%= body_string %></p>
+    <%= end %>
+    """
   end
 
   @doc """
