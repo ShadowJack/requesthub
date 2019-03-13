@@ -49,15 +49,13 @@
     background-color: lighten($bgcolor, 12%);
     border-radius: 0.5rem;
 
-    .request-details {
-      display: flex;
-      font-size: 1.1rem;
-      justify-content: space-between;
+    display: flex;
+    font-size: 1.1rem;
+    justify-content: space-between;
 
-      .request-details-actions {
-        display: flex;
-        flex-direction: column-reverse;
-      }
+    .request-details-actions {
+      display: flex;
+      flex-direction: column-reverse;
     }
   }
 

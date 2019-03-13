@@ -5,14 +5,11 @@ defmodule RequestbinWeb.RequestView do
   @doc """
   Build a request summary
   """
-  @spec get_request_summary(Reqest.t) :: Phoenix.Html.safe
-  def get_request_summary(%Request{verb: verb, type: type_id, body: body, query: query}) do
+  @spec render_request_summary(Reqest.t) :: Phoenix.Html.safe
+  def render_request_summary(%Request{verb: verb, headers: headers, body: body, query: query}) do
     verb_string = String.upcase(verb)
 
-    type_string = case RequestType.get_type_name_by_id(type_id) do
-      :other -> nil
-      type -> to_string(type)
-    end
+    type_string = Map.get(headers, "content-type")
 
     query_string = if String.length(query || "") > 0 do
       shorten(query, 50)
@@ -122,8 +119,10 @@ defmodule RequestbinWeb.RequestView do
     parsed = Plug.Conn.Query.decode(query)
 
     ~E"""
-    Parsed query string:<br/>
-    <%= render_key_value_table(parsed) %>
+    <div>
+      <p>Query string params:</p>
+      <%= render_key_value_table(parsed) %>
+    </div>
     """
   end
 
