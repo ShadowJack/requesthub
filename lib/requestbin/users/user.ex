@@ -11,7 +11,7 @@ defmodule Requestbin.Users.User do
     field :last_name, :string
     field :password_hash, :binary
 
-    many_to_many :bins, Requestbin.Bins.Bin, join_through: "users_bins"
+    many_to_many :bins, Requestbin.Bins.Bin, join_through: Requestbin.Users.UserBin
 
     timestamps()
   end

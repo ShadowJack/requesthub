@@ -10,6 +10,7 @@ defmodule RequestbinWeb.RequestViewTest do
       id: "test_id",
       bin_id: "test_bin_id", 
       verb: "POST",
+      headers: %{},
       body: body,
       parsed_body: parsed_body,
       query: query,
@@ -32,7 +33,7 @@ defmodule RequestbinWeb.RequestViewTest do
 
       rendered = render_to_string(RequestView, "show.html", req: req, conn: conn)
 
-      assert rendered =~ "Parsed query"
+      assert rendered =~ "Query string params"
       assert rendered =~ ~r/<td>\s*q\s*<\/td>\s*<td>\s*test string\s*<\/td>/
     end
 

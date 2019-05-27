@@ -9,9 +9,9 @@ defmodule Requestbin.BinsTest do
 
     @valid_attrs %{"name" => "Test bin"}
 
-    test "get_bin!/1 returns the bin with given id" do
+    test "get_bin/1 returns the bin with given id" do
       bin = Factory.insert(:bin)
-      assert Bins.get_bin!(bin.id) == bin
+      assert Bins.get_bin(bin.id) == bin
     end
 
     test "create_bin/1 with valid data creates a bin" do
@@ -21,7 +21,7 @@ defmodule Requestbin.BinsTest do
     test "delete_bin/1 deletes the bin" do
       bin = Factory.insert(:bin)
       assert {:ok, %Bin{}} = Bins.delete_bin(bin)
-      assert_raise Ecto.NoResultsError, fn -> Bins.get_bin!(bin.id) end
+      assert Bins.get_bin(bin.id) == nil
     end
   end
 

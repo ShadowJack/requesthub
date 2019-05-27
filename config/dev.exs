@@ -56,3 +56,11 @@ config :requestbin, Requestbin.Repo,
   database: "requestbin_dev",
   hostname: "localhost",
   pool_size: 10
+
+
+# delete old bins regularly
+config :requestbin, Requestbin.Scheduler,
+  global: true,
+  jobs: [
+    {"* * * * *", {Requestbin.Tasks.CleanupExpiredBins, :run, []}}
+  ]

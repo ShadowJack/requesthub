@@ -1,0 +1,19 @@
+defmodule Requestbin.SeedIds do
+  @moduledoc """
+  A set of ids to be used in priv/repo/seeds.exs
+  """
+
+  # bin
+  def bin_id, do: "00000000000000000000000000000000"
+
+  # requests
+  def get_id, do: "00000000000000000000000000000001"
+  def options_id, do: "00000000000000000000000000000002"
+  def head_id, do: "00000000000000000000000000000003"
+  def delete_id, do: "00000000000000000000000000000004"
+  def put_id, do: "00000000000000000000000000000005"
+  def patch_id, do: "00000000000000000000000000000006"
+  def post_json_id, do: "00000000000000000000000000000007"
+  def post_urlencoded_id, do: "00000000000000000000000000000008"
+  def post_form_data_id, do: "00000000000000000000000000000009"
+end

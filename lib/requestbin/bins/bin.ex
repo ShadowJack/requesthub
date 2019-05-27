@@ -8,7 +8,7 @@ defmodule Requestbin.Bins.Bin do
     field :name, :string
 
     has_many :requests, Requestbin.Bins.Request
-    many_to_many :users, Requestbin.Users.User, join_through: "users_bins"
+    many_to_many :users, Requestbin.Users.User, join_through: Requestbin.Users.UserBin
 
     timestamps()
   end

@@ -44,7 +44,9 @@ defmodule Requestbin.Mixfile do
       {:jason, "~> 1.1"},
       {:guardian, "~> 1.0"},
       {:argon2_elixir, "~> 2.0"},
-      {:ex_machina, "~> 2.3", only: :test}
+      {:ex_machina, "~> 2.3", only: :test},
+      {:quantum, "~> 2.3"},
+      {:timex, "~> 3.0"}
     ]
   end
 
