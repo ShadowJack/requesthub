@@ -37,7 +37,8 @@ config :requestbin, RequestbinWeb.Endpoint,
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
       ~r{lib/requestbin_web/views/.*(ex)$},
-      ~r{lib/requestbin_web/templates/.*(eex)$}
+      ~r{lib/requestbin_web/templates/.*(eex)$},
+      ~r{lib/requestbin_web/live/.*(ex)$}
     ]
   ]
 

@@ -1,7 +1,7 @@
 defmodule RequestbinWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :requestbin
 
-  socket "/socket", RequestbinWeb.UserSocket
+  socket "/live_view", RequestbinWeb.LiveViewSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -14,7 +14,7 @@ defmodule RequestbinWeb.Endpoint do
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
-    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
+    socket "/phoenix/live_reload/socket", RequestbinWeb.LiveReloadSocket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end

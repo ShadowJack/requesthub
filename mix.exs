@@ -33,7 +33,8 @@ defmodule Requestbin.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.4"},
+      # phoenix core
+      {:phoenix, "~> 1.4.3"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
@@ -41,10 +42,19 @@ defmodule Requestbin.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:plug_cowboy, "~> 1.0"},
+      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
+
+      # json
       {:jason, "~> 1.1"},
+
+      # auth
       {:guardian, "~> 1.0"},
       {:argon2_elixir, "~> 2.0"},
+
+      # tests 
       {:ex_machina, "~> 2.3", only: :test},
+
+      # background tasks
       {:quantum, "~> 2.3"},
       {:timex, "~> 3.0"}
     ]

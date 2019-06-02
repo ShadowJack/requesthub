@@ -14,7 +14,8 @@ defmodule RequestbinWeb.RequestController do
     if bin == nil do
       put_status(conn, :not_found)
     else
-      render(conn, "index.html", bin: bin)
+      Phoenix.LiveView.Controller.live_render(conn, RequestbinWeb.RequestsLive, session: %{bin: bin})
+      # render(conn, "index.html", bin: bin)
     end
   end
 

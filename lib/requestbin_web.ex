@@ -41,6 +41,7 @@ defmodule RequestbinWeb do
       import RequestbinWeb.ErrorHelpers
       import RequestbinWeb.Gettext
       import RequestbinWeb.Views.Utils
+      import Phoenix.LiveView, only: [live_render: 2, live_render: 3]
     end
   end
 
@@ -49,6 +50,7 @@ defmodule RequestbinWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 

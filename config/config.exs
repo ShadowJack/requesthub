@@ -14,8 +14,10 @@ config :requestbin, RequestbinWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "F2QQ+c2UHNHgK9uMoNh0fedclmGDhw3XYHv0DMJqk1ZGRN2SIo/KTtAZlu1w8kQm",
   render_errors: [view: RequestbinWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Requestbin.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Requestbin.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [
+    signing_salt: "63b5AYBOl00V9d9Lhk0ibFYgENZkS3OEy+87uV4+Hqo7MyBm9/hWRFQjNB7i84QH"
+    ]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -28,6 +30,10 @@ config :requestbin, Requestbin.Repo,
   types: Requestbin.PostgresTypes
 config :phoenix, :format_encoders, 
   json: Jason
+
+# Use leex for LiveView templates
+config :phoenix,
+  template_engines: [leex: Phoenix.LiveView.Engine]
 
 # Config authentication
 config :requestbin, Requestbin.Users.Guardian,
@@ -45,6 +51,7 @@ config :requestbin, Requestbin.Scheduler,
   jobs: [
     {"@hourly", {Requestbin.Tasks.CleanupExpiredBins, :run, []}}
   ]
+
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
