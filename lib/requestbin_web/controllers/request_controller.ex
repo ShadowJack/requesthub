@@ -21,8 +21,15 @@ defmodule RequestbinWeb.RequestController do
   def create(conn, _) do
     case Bins.create_request(conn) do
       {:ok, req} ->
+        # notify all active LiveViews about the new request
+        RequestbinWeb.Endpoint.broadcast(
+          RequestbinWeb.RequestsLive.topic(req.bin_id), 
+          RequestbinWeb.RequestsLive.request_created_event(), 
+          %{request: req})
         conn
         |> put_flash(:info, "Request has been created successfully.")
+        #TODO: redirect only if the request is made from browser
+        # otherwise - return 201 status and the link to /bins/:bin_id/requests
         |> redirect(to: request_path(conn, :show, req.bin_id, req.id))
       {:error, %Ecto.Changeset{errors: errors}} ->
         conn

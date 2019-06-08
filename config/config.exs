@@ -26,6 +26,7 @@ config :logger, :console,
 
 # Use Jason in Ecto and Phoenix
 config :ecto, json_library: Jason
+config :phoenix, json_library: Jason
 config :requestbin, Requestbin.Repo,
   types: Requestbin.PostgresTypes
 config :phoenix, :format_encoders, 
