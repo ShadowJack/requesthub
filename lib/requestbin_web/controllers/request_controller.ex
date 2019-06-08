@@ -27,7 +27,7 @@ defmodule RequestbinWeb.RequestController do
           RequestbinWeb.RequestsLive.request_created_event(), 
           %{request: req})
         conn
-        |> put_resp_header("Location", request_path(conn, :show, req.bin_id, req.id))
+        |> put_resp_header("location", request_path(conn, :show, req.bin_id, req.id))
         |> send_resp(:created, "OK")
       {:error, %Ecto.Changeset{errors: errors}} ->
         conn

@@ -14,8 +14,8 @@ defmodule RequestbinWeb.RequestControllerAuthenticatedTest do
   test "private bin can be accessed by the owner", %{bin_id: bin_id, conn: conn} do
     conn = get(conn, "/bins/#{bin_id}?a=123&b=321")
 
-    assert get_flash(conn, :info) =~ "Request has been created"
-    assert %{bin_id: ^bin_id} = redirected_params(conn)
+    assert response(conn, :created)
+    assert Plug.Conn.get_resp_header(conn, "location") |> List.first() =~ "bins/#{bin_id}"
   end
 
   test "requests in private bin can be accessed by the owner", %{bin_id: bin_id, conn: conn} do

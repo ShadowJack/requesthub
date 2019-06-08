@@ -108,8 +108,14 @@ defmodule RequestbinWeb.RequestControllerTest do
 
   @spec assert_and_get_request(Plug.Conn.t, String.t) :: Request.t | none
   defp assert_and_get_request(conn, bin_id) do
-    assert get_flash(conn, :info) =~ "Request has been created"
-    assert %{bin_id: ^bin_id, req_id: req_id} = redirected_params(conn)
+    assert response(conn, :created)
+    location = Plug.Conn.get_resp_header(conn, "location") |> List.first()
+    assert location =~ "bins/#{bin_id}"
+    req_id =
+      location 
+      |> String.trim("/")
+      |> String.split("/")
+      |> List.last()
     Bins.get_request!(bin_id, req_id)
   end
 end
