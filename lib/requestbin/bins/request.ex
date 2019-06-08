@@ -3,6 +3,8 @@ defmodule Requestbin.Bins.Request do
   import Ecto.Changeset
   require Logger
 
+  @type request_id :: String.t
+
   schema "requests" do
     belongs_to :bin, Requestbin.Bins.Bin
 

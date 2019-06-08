@@ -93,9 +93,15 @@ defmodule Requestbin.Bins do
       {:error, %Ecto.Changeset{}}
 
   """
-  @spec delete_bin(Bin.t) :: {:ok, Bin.t} | {:error, Ecto.Changeset.t}
+  @spec delete_bin(Bin.t | Bin.bin_id) :: {:ok, Bin.t} | {:error, :not_found} | {:error, Ecto.Changeset.t}
   def delete_bin(%Bin{} = bin) do
     Repo.delete(bin)
+  end
+  def delete_bin(bin_id) when is_binary(bin_id) do
+    case get_bin(bin_id) do
+      nil -> {:error, :not_found}
+      bin -> delete_bin(bin)
+    end
   end
 
 
@@ -169,6 +175,26 @@ defmodule Requestbin.Bins do
   @spec delete_request(Request.t) :: {:ok, Request.t} | {:error, Ecto.Changeset.t}
   def delete_request(%Request{} = request) do
     Repo.delete(request)
+  end
+
+  @doc """
+  Deletes a Request by id.
+
+  ## Examples
+
+      iex> delete_request(bin_id, req_id)
+      {:ok, %Request{}}
+
+      iex> delete_request(bin_id, req_id)
+      {:error, :not_found}
+
+  """
+  @spec delete_request(Bin.bin_id, Request.request_id) :: {:ok, Request.t} | {:error, :not_found} | {:error, Ecto.Changeset.t}
+  def delete_request(bin_id, req_id) when is_binary(bin_id) and is_binary(req_id) do
+    case get_request(bin_id, req_id) do
+      nil -> {:error, :not_found}
+      req -> delete_request(req)
+    end
   end
 
   @doc """

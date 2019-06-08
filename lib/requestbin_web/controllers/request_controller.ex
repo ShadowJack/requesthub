@@ -3,7 +3,6 @@ defmodule RequestbinWeb.RequestController do
 
   alias Requestbin.Bins
   alias Requestbin.Bins.Request
-  alias Requestbin.Repo
 
   plug :fetch_session when action in [:create]
   plug :fetch_flash when action in [:create]
@@ -45,12 +44,10 @@ defmodule RequestbinWeb.RequestController do
   end
 
   def delete(conn, %{"bin_id" => bin_id, "req_id" => req_id}) do
-    IO.puts("Deleting #{req_id}")
-    with %Request{} = req <- Bins.get_request(bin_id, req_id),
-         {:ok, _} <- Bins.delete_request(req) do
-      put_flash_and_redirect_to_index(conn, bin_id, :info, "The request has been deleted")
-    else
-      nil ->
+    case Bins.delete_request(bin_id, req_id) do
+      {:ok, _} -> 
+        put_flash_and_redirect_to_index(conn, bin_id, :info, "The request has been deleted")
+      {:error, :not_found} ->
         put_flash_and_redirect_to_index(conn, bin_id, :error, "Sorry, request with id=\"#{req_id}\" is not found.")
       {:error, _} ->
         put_flash_and_redirect_to_index(conn, bin_id, :error, "Sorry, an error has occured while deleting the request with id=\"#{req_id}\". Please try again later.")

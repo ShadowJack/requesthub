@@ -47,6 +47,7 @@
 
     <div class="request-details-actions">
       <div class="wrapper">
+        <a href="#requestDetails_<%= @req.id %>" phx-click="delete_request" phx-value="<%= @req.id %>" class="btn btn-outline-danger">Delete</a>
       </div>
     </div>
 
