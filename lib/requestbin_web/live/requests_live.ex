@@ -11,6 +11,9 @@ defmodule RequestbinWeb.RequestsLive do
   and once the client establishes the connection over socket
   """
   def mount(%{bin: bin}, socket) do
+    # subscribe to a PubSub topic in order to receive 
+    # the bin updates later
+    RequestbinWeb.Endpoint.subscribe(topic(bin.id))
     {:ok, assign(socket, bin_id: bin.id, requests: bin.requests)}
   end
 
@@ -34,6 +37,8 @@ defmodule RequestbinWeb.RequestsLive do
     # set some wrong req_id, but cannot change the bin_id. (Is it true?)
     with {:ok, _} <- Bins.delete_request(socket.assigns.bin_id, req_id),
          %Bin{requests: requests} <- Bins.get_bin_with_requests(socket.assigns.bin_id) do
+      # Notify other related LiveViews about the changes
+      RequestbinWeb.Endpoint.broadcast_from(self(), topic(socket.assigns.bin_id), "request_deleted", %{requests: requests} )
       {:noreply, assign(socket, :requests, requests)}
     else
       {:error, :not_found} -> 
@@ -41,5 +46,19 @@ defmodule RequestbinWeb.RequestsLive do
       {:error, _} ->
         {:noreply, put_flash(socket, :error, "Sorry, an error has occured while deleting the request with id=\"#{req_id}\". Please try again later.")}
     end
+  end
+
+
+  # handle the update message from PubSub
+  def handle_info(%{payload: %{requests: requests}}, socket) do
+    {:noreply, assign(socket, :requests, requests)}
+  end
+
+
+  ## Helpers
+  #
+  @spec topic(Bin.bin_id) :: String.t
+  defp topic(bin_id) do
+    "updated_requests:#{bin_id}"
   end
 end
