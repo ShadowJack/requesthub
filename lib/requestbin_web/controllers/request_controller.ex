@@ -27,10 +27,8 @@ defmodule RequestbinWeb.RequestController do
           RequestbinWeb.RequestsLive.request_created_event(), 
           %{request: req})
         conn
-        |> put_flash(:info, "Request has been created successfully.")
-        #TODO: redirect only if the request is made from browser
-        # otherwise - return 201 status and the link to /bins/:bin_id/requests
-        |> redirect(to: request_path(conn, :show, req.bin_id, req.id))
+        |> put_resp_header("Location", request_path(conn, :show, req.bin_id, req.id))
+        |> send_resp(:created, "OK")
       {:error, %Ecto.Changeset{errors: errors}} ->
         conn
         |> put_flash(:error, Request.build_error_message(errors))
