@@ -58,4 +58,29 @@ defmodule RequestbinWeb.RequestsLiveTest do
     assert render(view) =~ req_id
     assert render(view) =~ new_req.id
   end
+
+  test "uncollapsed state is saved between events", %{bin: bin, req_id: req_id} do
+    req2 = Factory.insert(:request, %{bin: bin})
+    bin = 
+      Requestbin.Bins.Bin
+      |> Requestbin.Repo.get(bin.id)
+      |> Requestbin.Repo.preload(:requests)
+    {:ok, view, _html} = mount(Endpoint, RequestsLive, session: %{bin: bin})
+
+    # uncollapse req2
+    render_click(view, :toggle_collapse, req2.id)
+
+    # insert a new request
+    req3 = Factory.insert(:request, %{bin: bin})
+    msg = %{
+      event: RequestsLive.request_created_event(),
+      payload: %{request: req3}
+    }
+    send(view.pid, msg)
+
+    html = render(view)
+    assert html =~ "#{req_id}\" role=\"button\" aria-expanded=\"true\""
+    assert html =~ "#{req2.id}\" role=\"button\" aria-expanded=\"true\""
+    assert html =~ "#{req3.id}\" role=\"button\" aria-expanded=\"false\""
+  end
 end

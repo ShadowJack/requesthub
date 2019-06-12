@@ -5,6 +5,7 @@ defmodule RequestbinWeb.RequestsLive do
   use Phoenix.LiveView
   alias Requestbin.Bins
   alias Requestbin.Bins.{Bin, Request}
+  alias RequestbinWeb.Presenters.RequestPresenter
 
   @request_deleted_event "request_deleted"
   @request_created_event "request_created"
@@ -20,7 +21,11 @@ defmodule RequestbinWeb.RequestsLive do
     # subscribe to a PubSub topic in order to receive 
     # the bin updates later
     RequestbinWeb.Endpoint.subscribe(topic(bin.id))
-    {:ok, assign(socket, bin_id: bin.id, requests: bin.requests)}
+    requests = 
+      bin.requests 
+      |> Enum.map(fn r -> RequestPresenter.build(r) end)
+      |> uncollapse_first_request()
+    {:ok, assign(socket, bin_id: bin.id, requests: requests)}
   end
 
   @doc """
@@ -29,8 +34,8 @@ defmodule RequestbinWeb.RequestsLive do
   def render(assigns) do
     ~L"""
     <h4>Latest requests for /<%= @bin_id %></h4> 
-    <%= for {req, id_in_list} <- Enum.with_index(@requests) do %>
-      <%= RequestbinWeb.RequestView.render("details.html", req: req, is_collapsed: id_in_list != 0) %>
+    <%= for req <- @requests do %>
+      <%= RequestbinWeb.RequestView.render("details.html", req: req.request, is_collapsed: req.is_collapsed) %>
     <% end %>
     """
   end
@@ -54,10 +59,33 @@ defmodule RequestbinWeb.RequestsLive do
         requests = requests_after_removal(socket.assigns.requests, req_id)
         {:noreply, assign(socket, :requests, requests)}
       {:error, :not_found} -> 
-        {:noreply, put_flash(socket, :error, "Sorry, request with id=\"#{req_id}\" is not found.")}
+        {:stop, 
+          socket
+          |> put_flash(:error, "Sorry, request with id=\"#{req_id}\" is not found.")
+          |> redirect(to: RequestbinWeb.Routes.request_path(RequestbinWeb.Endpoint, RequestbinWeb.RequestView, socket.assigns.bin_id))
+        }
       {:error, _} ->
-        {:noreply, put_flash(socket, :error, "Sorry, an error has occured while deleting the request with id=\"#{req_id}\". Please try again later.")}
+        {:stop,
+          socket
+          |> put_flash(:error, "Sorry, an error has occured while deleting the request with id=\"#{req_id}\". Please try again later.")
+          |> redirect(to: RequestbinWeb.Routes.request_path(RequestbinWeb.Endpoint, RequestbinWeb.RequestView, socket.assigns.bin_id))
+        }
     end
+  end
+
+  @doc """
+  Handle collapse/uncollapse event
+  """
+  def handle_event("toggle_collapse", req_id, socket) do
+
+    requests = socket.assigns.requests |> Enum.map(fn r -> 
+      if (r.request.id == req_id) do
+        %RequestPresenter{r | is_collapsed: !r.is_collapsed}
+      else
+        r
+      end
+    end)
+    {:noreply, assign(socket, :requests, requests)}
   end
 
 
@@ -105,21 +133,26 @@ defmodule RequestbinWeb.RequestsLive do
   #
 
   # update the list of requests after a new request is created
-  @spec requests_after_creation([Request.t], Request.t) :: [Request.t]
+  @spec requests_after_creation([RequestPresenter.t], Request.t) :: [RequestPresenter.t]
   defp requests_after_creation(requests, new_req) do
-    if Enum.any?(requests, fn r -> r.id == new_req.id end) do
+    if Enum.any?(requests, fn r -> r.request.id == new_req.id end) do
       requests
     else
-      [new_req | requests]
+      [RequestPresenter.build(new_req) | requests]
     end
-
   end
 
   # update the list of requests after one of requests was deleted
-  @spec requests_after_removal([Request.t], Request.request_id) :: [Request.t]
+  @spec requests_after_removal([RequestPresenter.t], Request.request_id) :: [RequestPresenter.t]
   defp requests_after_removal(requests, deleted_req_id) do
     requests
-    |> Enum.reject(fn r -> r.id == deleted_req_id end)
+    |> Enum.reject(fn r -> r.request.id == deleted_req_id end)
+  end
+
+  @spec uncollapse_first_request([RequestPresenter.t]) :: [RequestPresenter.t]
+  defp uncollapse_first_request([]), do: []
+  defp uncollapse_first_request([head | tail]) do
+    [%RequestPresenter{head | is_collapsed: false} | tail]
   end
 
 end
