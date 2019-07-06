@@ -28,3 +28,6 @@ npm-debug.log
 
 # MacOS system folder
 .DS_Store
+
+# Do not store coveralls results in the repo
+/cover
