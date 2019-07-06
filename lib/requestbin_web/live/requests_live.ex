@@ -62,13 +62,13 @@ defmodule RequestbinWeb.RequestsLive do
         {:stop, 
           socket
           |> put_flash(:error, "Sorry, request with id=\"#{req_id}\" is not found.")
-          |> redirect(to: RequestbinWeb.Routes.request_path(RequestbinWeb.Endpoint, RequestbinWeb.RequestView, socket.assigns.bin_id))
+          |> redirect(to: RequestbinWeb.Router.Helpers.request_path(RequestbinWeb.Endpoint, :index, socket.assigns.bin_id))
         }
       {:error, _} ->
         {:stop,
           socket
           |> put_flash(:error, "Sorry, an error has occured while deleting the request with id=\"#{req_id}\". Please try again later.")
-          |> redirect(to: RequestbinWeb.Routes.request_path(RequestbinWeb.Endpoint, RequestbinWeb.RequestView, socket.assigns.bin_id))
+          |> redirect(to: RequestbinWeb.Router.Helpers.request_path(RequestbinWeb.Endpoint, :index, socket.assigns.bin_id))
         }
     end
   end
